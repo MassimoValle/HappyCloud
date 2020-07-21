@@ -1,0 +1,13 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="TIW-Valle-Esame2020-Gallery:war exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/TIW_Valle_Esame2020_Gallery_war_exploded</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="TIW-Valle-Esame2020-Gallery/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="TIW-Valle-Esame2020-Gallery" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>
