@@ -1,0 +1,55 @@
+body {
+    height: 100%;
+    position: relative;
+    /*background-image: url('../Resources/Backgrounds/loginBG.jpg');*/
+    /*border: 3px solid green;*/
+}
+
+input {
+    margin-bottom:3px;
+    padding:5%;
+    width: 88.5%;
+    border:1px solid #CCC
+}
+
+button {
+    padding:10px
+}
+
+label {
+    cursor:pointer
+}
+
+#divContainer {
+    background-color: #CCCCCC;
+    /*border: 3px solid orange;*/
+    margin:0 auto;
+    width:400px;
+    height: 400px;
+
+    align-items: center;
+}
+
+#divFields {
+    margin-left: 2px;
+    margin-right: 2px;
+    width: 100%;
+}
+
+#form-switch {
+    display:none
+}
+#register-form {
+    display:none
+}
+#form-switch:checked~#register-form {
+    display:block
+}
+#form-switch:checked~#login-form {
+    display:none
+}
+
+
+.errorMessage{
+    color: red;
+}

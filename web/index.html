@@ -1,10 +1,46 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" type="text/css" media="all"
+	  href="loginStyle.css" th:href="@{/loginStyle.css}" />
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+<meta charset="ISO-8859-1">
+<title>Login page</title>
 </head>
-<body>
-    <p>index</p>
+
+	<div id="divContainer">
+
+		<div id="divFields">
+			<h1>Photo Gallery</h1>
+
+			<input type='checkbox' id='form-switch'>
+
+
+			<form id='login-form' action="CheckLogin" method='POST'>
+				<input type="text" name="username" placeholder="Username" required>
+				<input type="password" name="password" placeholder="Password" required>
+				<button type='submit'>Login</button>
+
+				<label for='form-switch'><span>Register</span></label>
+
+				<p class="errorMessage" th:text=" ${errorMessage}"></p>
+			</form>
+			<form id='register-form' action="RegisterUser" method='POST'>
+				<input type="text" placeholder="Username" required>
+				<input type="email" placeholder="Email" required>
+				<input type="password" placeholder="Password" required>
+				<input type="password" placeholder="Re Password" required>
+				<button type='submit'>Register</button>
+
+				<label for='form-switch'>Already Member ? Sign In Now..</label>
+
+				<p class="errorMessage" th:text=" ${errorMessage}"></p>
+			</form>
+		</div>
+
+	</div>
+
+
+
+
 </body>
 </html>
