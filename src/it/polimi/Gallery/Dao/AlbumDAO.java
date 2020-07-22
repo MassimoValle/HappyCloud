@@ -1,6 +1,7 @@
 package it.polimi.Gallery.Dao;
 
 import it.polimi.Gallery.Beans.Album;
+import it.polimi.Gallery.Beans.Photo;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -43,6 +44,36 @@ public class AlbumDAO {
         }
 
         return albums;
+    }
+
+    public List<Photo> getFivePhoto(int albumId, int currentSet) throws SQLException {
+
+        List<Photo> photos = new ArrayList<>();
+
+        String query = "SELECT * FROM db_Gallery_TIW2020.album";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            try (ResultSet result = preparedStatement.executeQuery()) {
+                while (result.next()) {
+                    Photo photo = new Photo();
+                    photo.setId(result.getInt("id"));
+                    photo.setTitle(result.getString("title"));
+                    photo.setDate(result.getDate("date"));
+                    photo.setDescription(result.getString("description"));
+                    photo.setPath(result.getString("path"));
+
+                    photos.add(photo);
+                }
+            }
+            catch (SQLException e){
+                connection.rollback();
+                return null;
+            }
+        }
+
+        return photos;
+
     }
 
 

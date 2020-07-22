@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"  xmlns:th="http://www.thymeleaf.org">
 <link rel="stylesheet" type="text/css" media="all"
-      href="style.css" th:href="@{/style.css}" />
+      href="CSS/style.css" th:href="@{/CSS/style.css}" />
 <head>
     <meta charset="UTF-8">
     <title>Home Page</title>
@@ -28,7 +28,7 @@
     <tr th:each="album : ${albums}">
         <td th:text="${album.title}">title</td>
         <td th:text="${album.date}">date</td>
-        <td><a th:href="@{/GetAlbumDetails(meetingId=${album.id})}">Details</a></td>
+        <td><a th:href="@{/GetFivePhotos(albumId=${album.id})}">Show</a></td>
     </tr>
     </tbody>
 </table>
