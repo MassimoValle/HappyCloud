@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" type="text/css" media="all"
+      href="style.css" th:href="@{/style.css}" />
+<head>
+    <meta charset="UTF-8">
+    <title>Home Page</title>
+</head>
+<body>
+
+<div id="id_logout">
+    <a th:href="@{/Logout}">Logout</a>
+</div>
+<h1>Welcome to the Gallery's Home Page</h1>
+<p th:text="${'Nice to see you again ' + session.user.name + ' ' + session.user.surname}"></p>
+
+
+<h2>Albums:</h2>
+<table th:if="${not #lists.isEmpty(albums)}">
+    <thead>
+    <tr>
+        <th>Title</th>
+        <th>Date</th>
+        <th>Link</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="album : ${albums}">
+        <td th:text="${album.title}">title</td>
+        <td th:text="${album.date}">date</td>
+        <td><a th:href="@{/GetAlbumDetails(meetingId=${album.id})}">Details</a></td>
+    </tr>
+    </tbody>
+</table>
+<p th:if="${ #lists.isEmpty(albums)}">No albums yet!</p>
+
+
+</body>
+</html>
