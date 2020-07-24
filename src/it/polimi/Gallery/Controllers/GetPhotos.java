@@ -18,14 +18,14 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-@WebServlet("/GetFivePhotos")
-public class GetFivePhotos extends HttpServlet {
+@WebServlet("/GetPhotos")
+public class GetPhotos extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
     private Connection connection = null;
     private TemplateEngine templateEngine;
 
-    private int currentSet = 0;
+    private int currentSet = 1;
 
     public void init() throws ServletException {
         this.templateEngine = ServletUtils.createThymeleafTemplate(getServletContext());
@@ -40,18 +40,22 @@ public class GetFivePhotos extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         int albumId;
+        int set;
         try {
             albumId = Integer.parseInt(request.getParameter("albumId"));
+            set = Integer.parseInt(request.getParameter("set"));
         } catch (NumberFormatException | NullPointerException e) {
             // only for debugging e.printStackTrace();
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Incorrect param values");
             return;
         }
 
+        currentSet += set;
+
         AlbumDAO albumDAO = new AlbumDAO(connection);
         List<Photo> photos;
         try {
-            photos = albumDAO.getFivePhoto(albumId, currentSet);
+            photos = albumDAO.getFivePhotos(albumId, currentSet);
             if (photos == null) {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "Resource not found");
                 return;
@@ -61,11 +65,30 @@ public class GetFivePhotos extends HttpServlet {
             return;
         }
 
+        boolean before = false;
+        boolean next = false;
+
+
+        if(photos.size() < 5) next = false;
+        else {  // check if there are other photo after those 5
+            try {
+                next = albumDAO.hasNext(currentSet);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if(currentSet > 5) before = true;
+
+
+
         // Redirect to the Home page and add missions to the parameters
         String path = "/albumPage.html";
         ServletContext servletContext = getServletContext();
         final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
         ctx.setVariable("photos", photos);
+        ctx.setVariable("before", before);
+        ctx.setVariable("next", next);
         templateEngine.process(path, ctx, response.getWriter());
     }
 

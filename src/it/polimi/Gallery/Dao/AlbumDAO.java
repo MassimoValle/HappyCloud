@@ -12,7 +12,7 @@ import java.util.List;
 
 public class AlbumDAO {
 
-    private Connection connection;
+    private final Connection connection;
 
     public AlbumDAO(Connection connection) {
         this.connection = connection;
@@ -46,13 +46,17 @@ public class AlbumDAO {
         return albums;
     }
 
-    public List<Photo> getFivePhoto(int albumId, int currentSet) throws SQLException {
+    public List<Photo> getFivePhotos(int albumId, int currentSet) throws SQLException {
 
         List<Photo> photos = new ArrayList<>();
 
-        String query = "SELECT * FROM db_Gallery_TIW2020.album";
+        String query = "SELECT * FROM db_Gallery_TIW2020.album WHERE id = ?";
+        // prendi le foto nell'album che corrisponde a albumId che vanno da currentSet a currentSet+4 (estremi inclusi)
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setString(1, String.valueOf(albumId));
+            //preparedStatement.setString(2, String.valueOf(currentSet));
 
             try (ResultSet result = preparedStatement.executeQuery()) {
                 while (result.next()) {
@@ -74,6 +78,25 @@ public class AlbumDAO {
 
         return photos;
 
+    }
+
+
+    public boolean hasNext(int currentSet) throws SQLException {
+
+        String query = "SELECT * FROM db_Gallery_TIW2020.album WHERE id > ?";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setString(1, String.valueOf(currentSet+4));
+
+            try (ResultSet result = preparedStatement.executeQuery()) {
+
+                return result.next();
+            } catch (SQLException e) {
+                connection.rollback();
+                return false;
+            }
+        }
     }
 
 

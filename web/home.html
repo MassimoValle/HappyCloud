@@ -28,7 +28,7 @@
     <tr th:each="album : ${albums}">
         <td th:text="${album.title}">title</td>
         <td th:text="${album.date}">date</td>
-        <td><a th:href="@{/GetFivePhotos(albumId=${album.id})}">Show</a></td>
+        <td><a th:href="@{/GetPhotos(albumId=${album.id})}">Show</a></td>
     </tr>
     </tbody>
 </table>

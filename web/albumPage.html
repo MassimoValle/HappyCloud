@@ -14,15 +14,21 @@
     <a th:href="@{/Logout}">Logout</a>
 </div>
 
+
 <table th:if="${not #lists.isEmpty(photos)}">
     <tbody>
         <tr th:each="photo : ${photos}">
+
+            <td th:if="${before}"><input type="submit" value="<"></td>
 
             <td>
                 <p th:text="${photo.title}">title</p>
                 <img alt="Forest" th:src="@{photo.path}" src="../Resources/default.png"/>
 
             </td>
+
+            <td th:if="${next}"><input type="submit" value=">"></td>
+
         </tr>
     </tbody>
 </table>
@@ -31,40 +37,49 @@
 
 
 
-<table id="vertical-2">
+<table id="photoTable">
     <caption>Image selected:</caption>
     <thead>
-    <tr>
-        <th colspan="3">Title</th>
-    </tr>
-    <tr>
-        <th colspan="3">Date</th>
-    </tr>
-    <tr>
-        <th colspan="3">Description</th>
-    </tr>
-    <tr>
-        <th colspan="3">Image</th>
-    </tr>
+        <tr>
+            <th>Title</th>
+        </tr>
+        <tr>
+            <th>Date</th>
+        </tr>
+        <tr>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <th>Image</th>
+        </tr>
     </thead>
     <tbody>
-    <tr>
-        <td>title</td>
-    </tr>
-    <tr>
-        <td>2020-02-02</td>
-    </tr>
-    <tr>
-        <td>This is a description</td>
-    </tr>
-    <tr>
-        <td>Photo here!</td>
-    </tr>
+        <tr>
+            <td th:text="${photo.title}">title</td>
+        </tr>
+        <tr>
+            <td th:text="${photo.date}">2020-02-02</td>
+        </tr>
+        <tr>
+            <td th:text="${photo.description}">This is a description</td>
+        </tr>
+        <tr>
+            <td><img alt="Forest" th:src="@{photo.path}" src="../Resources/default.png"/></td>
+        </tr>
     </tbody>
+
     <tfoot>
-    <tr>
-        <td colspan="4">Comments</td>
-    </tr>
+        <tr>
+            <!--<td colspan="4">Comments</td>-->
+
+            <table>
+                <caption>Comments:</caption>
+                <tr th:each="comment : ${photo.comments}">
+                    <td th:text="${comment.user}: ${comment.text}">user: text</td>
+                </tr>
+            </table>
+
+        </tr>
     </tfoot>
 </table>
 
