@@ -72,4 +72,25 @@ public class UserDAO {
 		return users;
 	}
 
+	public User registerUser(String username, String email,  String password) throws SQLException{
+		String query = "INSERT INTO db_Gallery_TIW2020.user VALUES (?, ?, ?)";
+
+		try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+			preparedStatement.setString(1, username);
+			preparedStatement.setString(2, email);
+			preparedStatement.setString(3, password);
+
+			try (ResultSet result = preparedStatement.executeQuery()) {
+				// che risultato da una INSERT INTO?
+				if (result.next()) return initUser(result);
+				else return null;
+			}
+			catch (SQLException e){
+				connection.rollback();
+				// statement.rollback
+				return null;
+			}
+		}
+	}
 }

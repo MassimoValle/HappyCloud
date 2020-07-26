@@ -22,19 +22,18 @@
 
 				<label for='form-switch'><span>Register</span></label>
 
-				<p class="errorMessage" th:text=" ${errorMessage}"></p>
 			</form>
 			<form id='register-form' action="RegisterUser" method='POST'>
-				<input type="text" placeholder="Username" required>
-				<input type="email" placeholder="Email" required>
-				<input type="password" placeholder="Password" required>
-				<input type="password" placeholder="Re Password" required>
+				<input type="text" name="username" placeholder="Username" required>
+				<input type="email" name="email" placeholder="Email" required>
+				<input type="password" name="password" placeholder="Password" required>
+				<input type="password" name="confPassword" placeholder="Re Password" required>
 				<button type='submit'>Register</button>
 
 				<label for='form-switch'>Already Member ? Sign In Now..</label>
 
-				<p class="errorMessage" th:text=" ${errorMessage}"></p>
 			</form>
+			<p class="errorMessage" th:text=" ${errorMessage}"></p>
 		</div>
 
 	</div>
