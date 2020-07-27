@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 @WebServlet("/Registration")
 public class Registration extends HttpServlet {
@@ -34,22 +33,26 @@ public class Registration extends HttpServlet {
 
         // obtain and escape params
         String username;
+        String name;
+        String surname;
         String email;
         String password;
         String confPassowrd;
 
         try {
             username = request.getParameter("username");
+            name = request.getParameter("name");
+            surname = request.getParameter("surname");
             email = request.getParameter("email");
             password = request.getParameter("password");
-            confPassowrd = request.getParameter("confPassowrd");
+            confPassowrd = request.getParameter("confPassword");
 
-            if (username==null || email==null || password==null || confPassowrd==null) {
+            if (username==null || name==null || surname== null || email==null || password==null || confPassowrd==null) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 invalidCredentials("Attributes can't be null", request, response);
                 return;
             }
-            else if(username.isEmpty() || email.isEmpty() || password.isEmpty() || confPassowrd.isEmpty()) {
+            else if(username.isEmpty() || name.isEmpty() || surname.isEmpty() || email.isEmpty() || password.isEmpty() || confPassowrd.isEmpty()) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 invalidCredentials("Attributes can't be empty", request, response);
                 return;
@@ -64,6 +67,7 @@ public class Registration extends HttpServlet {
 
         if(!password.equals(confPassowrd)){
             // errore "passwords are different"
+            invalidCredentials("Passwords don't match", request, response);
             return;
         }
 
@@ -74,7 +78,7 @@ public class Registration extends HttpServlet {
 
         try {
             // provo ad aggiungere l'utente al db, poichè username è attributo unico, ritorna null se già presente
-            user = userDao.registerUser(username, email, password);
+            user = userDao.registerUser(username, name, surname, email, password);
         } catch (SQLException e) {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Not Possible to check attributes");
             return;
