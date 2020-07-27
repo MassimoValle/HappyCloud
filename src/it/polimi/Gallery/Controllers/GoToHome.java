@@ -1,7 +1,6 @@
 package it.polimi.Gallery.Controllers;
 
 import it.polimi.Gallery.Beans.Album;
-import it.polimi.Gallery.Beans.User;
 import it.polimi.Gallery.Dao.AlbumDAO;
 import it.polimi.Gallery.Utils.ConnectionHandler;
 import it.polimi.Gallery.Utils.ServletUtils;
@@ -14,7 +13,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;

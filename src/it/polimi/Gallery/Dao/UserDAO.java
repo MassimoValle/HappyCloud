@@ -72,7 +72,7 @@ public class UserDAO {
 		return users;
 	}
 
-	public User registerUser(String username, String name, String surname, String email,  String password) throws SQLException{
+	public User registerUser(String username, String name, String surname, String email, String password) throws SQLException{
 
 		User user = new User();
 		user.setUsername(username);
@@ -81,7 +81,10 @@ public class UserDAO {
 		user.setEmail(email);
 		user.setPassword(password);
 
-		String query = "INSERT INTO db_Gallery_TIW2020.User VALUES (?,?,?,?,?)";
+		//String query = "INSERT INTO db_Gallery_TIW2020.User (Username, Name, Surname, Email, Password) VALUES (?,?,?,?,?)";
+
+
+		String query = "INSERT INTO db_Gallery_TIW2020.User VALUES (?, ?, ?, ?, ?);";
 
 		try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
@@ -92,7 +95,7 @@ public class UserDAO {
 			preparedStatement.setString(5, user.getPassword());
 
 			try {
-				int result = preparedStatement.executeUpdate(query);
+				int result = preparedStatement.executeUpdate();
 
 				if(result > 0)
 					return user;
