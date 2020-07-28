@@ -23,7 +23,7 @@ public class AlbumDAO {
 
         List<Album> albums = new ArrayList<>();
 
-        String query = "SELECT * FROM db_Gallery_TIW2020.album";
+        String query = "SELECT * FROM db_Gallery_TIW2020.album ORDER BY Date DESC";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
@@ -50,13 +50,14 @@ public class AlbumDAO {
 
         List<Photo> photos = new ArrayList<>();
 
-        String query = "SELECT * FROM db_Gallery_TIW2020.album WHERE id = ?";
+        String query = "SELECT * FROM db_Gallery_TIW2020.Image " +
+                         "WHERE AlbumId = ? ORDER BY Date DESC LIMIT 5 OFFSET ?";
         // prendi le foto nell'album che corrisponde a albumId che vanno da currentSet a currentSet+4 (estremi inclusi)
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
-            preparedStatement.setString(1, String.valueOf(albumId));
-            //preparedStatement.setString(2, String.valueOf(currentSet));
+            preparedStatement.setInt(1, albumId);
+            preparedStatement.setInt(2, ((currentSet-1)*5));
 
             try (ResultSet result = preparedStatement.executeQuery()) {
                 while (result.next()) {
@@ -81,13 +82,17 @@ public class AlbumDAO {
     }
 
 
-    public boolean hasNext(int currentSet) throws SQLException {
+    public boolean hasNext(Integer albumId, Integer currentSet) throws SQLException {
 
-        String query = "SELECT * FROM db_Gallery_TIW2020.album WHERE id > ?";
+        String query = "SELECT * FROM db_Gallery_TIW2020.Image " +
+                "WHERE AlbumId = ? LIMIT 5 OFFSET ?";
+        //exclude currentSet x 5 result
+
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
-            preparedStatement.setString(1, String.valueOf(currentSet+4));
+            preparedStatement.setInt(1, albumId);
+            preparedStatement.setInt(2, (currentSet*5));
 
             try (ResultSet result = preparedStatement.executeQuery()) {
 

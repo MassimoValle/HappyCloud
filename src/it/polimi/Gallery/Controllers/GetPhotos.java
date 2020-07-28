@@ -25,7 +25,7 @@ public class GetPhotos extends HttpServlet {
     private Connection connection = null;
     private TemplateEngine templateEngine;
 
-    private int currentSet = 1;
+    private int currentSet = 0;
 
     public void init() throws ServletException {
         this.templateEngine = ServletUtils.createThymeleafTemplate(getServletContext());
@@ -50,7 +50,7 @@ public class GetPhotos extends HttpServlet {
             return;
         }
 
-        currentSet += set;
+        currentSet = set;
 
         AlbumDAO albumDAO = new AlbumDAO(connection);
         List<Photo> photos;
@@ -72,13 +72,13 @@ public class GetPhotos extends HttpServlet {
         if(photos.size() < 5) next = false;
         else {  // check if there are other photo after those 5
             try {
-                next = albumDAO.hasNext(currentSet);
+                next = albumDAO.hasNext(albumId, currentSet);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
 
-        if(currentSet > 5) before = true;
+        if(currentSet > 1) before = true;
 
 
 
@@ -86,6 +86,8 @@ public class GetPhotos extends HttpServlet {
         String path = "/albumPage.html";
         ServletContext servletContext = getServletContext();
         final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
+        ctx.setVariable("albumId", albumId);
+        ctx.setVariable("set", currentSet);
         ctx.setVariable("photos", photos);
         ctx.setVariable("before", before);
         ctx.setVariable("next", next);

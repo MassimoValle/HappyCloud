@@ -28,11 +28,12 @@
     <tr th:each="album : ${albums}">
         <td th:text="${album.title}">title</td>
         <td th:text="${album.date}">date</td>
-        <td><a th:href="@{/GetPhotos(albumId=${album.id})}">Show</a></td>
+        <td><a th:href="@{/GetPhotos(albumId=${album.id}, set=1)}">Show</a></td>
     </tr>
     </tbody>
 </table>
 <p th:if="${ #lists.isEmpty(albums)}">No albums yet!</p>
+<img th:src="./Resources/Album/SpaceX/spacex9.jpg" src="./Resources/Album/SpaceX/spacex9.jpg">
 
 
 </body>

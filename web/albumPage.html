@@ -8,7 +8,7 @@
 </head>
 <body>
 <div id="id_backToHome">
-    <a href="home.html">Back to Home</a>
+    <a th:href="@{/GoToHome}">Back to Home</a>
 </div>
 <div id="id_logout">
     <a th:href="@{/Logout}">Logout</a>
@@ -17,18 +17,20 @@
 
 <table th:if="${not #lists.isEmpty(photos)}">
     <tbody>
-        <tr th:each="photo : ${photos}">
+        <tr>
 
-            <td th:if="${before}"><input type="submit" value="<"></td>
+            <!--<td th:if="${before}"><input th:href="@{/GetPhotos(albumId=${albumId}, set=${set-1})}" type="submit" value="<"></td>-->
+            <td th:if="${before}"><a th:href="@{/GetPhotos(albumId=${albumId}, set=${set-1})}">Back</a></td>
 
-            <td>
+            <td th:each="photo : ${photos}">
+
                 <p th:text="${photo.title}">title</p>
-                <img alt="Forest" th:src="@{photo.path}" src="../Resources/default.png"/>
+                <img th:href="@{/GetPhotoDetails(albumId=${albumId}, photos=${photos}, set=${set}, before=${before}, next=${next})}" th:src="@{photo.path}" src="../Resources/default.png"/>
 
             </td>
 
-            <td th:if="${next}"><input type="submit" value=">"></td>
-
+            <!--<td th:if="${next}"><input th:href="@{/GetPhotos(albumId=${albumId}, set=${set+1})}" type="submit" value=">"></td>-->
+            <td th:if="${next}"><a th:href="@{/GetPhotos(albumId=${albumId}, set=${set+1})}">Next</a></td>
         </tr>
     </tbody>
 </table>
