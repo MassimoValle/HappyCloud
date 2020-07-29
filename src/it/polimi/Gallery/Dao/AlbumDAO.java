@@ -1,6 +1,7 @@
 package it.polimi.Gallery.Dao;
 
 import it.polimi.Gallery.Beans.Album;
+import it.polimi.Gallery.Beans.Comment;
 import it.polimi.Gallery.Beans.Photo;
 
 import java.sql.Connection;
@@ -8,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class AlbumDAO {
@@ -77,8 +79,48 @@ public class AlbumDAO {
             }
         }
 
+        photos = getComments(photos);
+
         return photos;
 
+    }
+
+    private List<Photo> getComments(List<Photo> photos) throws SQLException {
+
+
+        String query = "SELECT * FROM db_Gallery_TIW2020.Comments WHERE ImageId = ?";
+
+        for(Photo photo : photos){
+
+            List<Comment> comments = new ArrayList<>();
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+                preparedStatement.setInt(1, photo.getId());
+
+                try (ResultSet result = preparedStatement.executeQuery()) {
+                    while (result.next()) {
+
+                        Comment comment = new Comment();
+
+                        comment.setUsername(result.getString("Username"));
+                        comment.setText(result.getString("Text"));
+                        comment.setDate(result.getDate("date"));
+
+                        comments.add(comment);
+
+                    }
+                }
+                catch (SQLException e){
+                    connection.rollback();
+                    return null;
+                }
+            }
+
+            photo.setComments(comments);
+        }
+
+        return photos;
     }
 
 

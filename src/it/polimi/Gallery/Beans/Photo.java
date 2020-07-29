@@ -1,6 +1,7 @@
 package it.polimi.Gallery.Beans;
 
 import java.util.Date;
+import java.util.List;
 
 public class Photo {
 
@@ -9,6 +10,7 @@ public class Photo {
     private Date date;
     private String description;
     private String path;
+    private List<Comment> comments;
 
     public int getId() {
         return id;
@@ -48,5 +50,13 @@ public class Photo {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 }

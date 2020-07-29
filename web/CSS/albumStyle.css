@@ -13,11 +13,3 @@ img:hover {
     margin-left: 2%;
     float: left;
 }
-
-
-
-
-/* ### TABELLA IMMAGINE SELEZIONATA */
-#vertical-2 thead,#vertical-2 tbody{
-    display:inline-block;
-}

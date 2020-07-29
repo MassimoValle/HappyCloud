@@ -15,75 +15,67 @@
 </div>
 
 
-<table th:if="${not #lists.isEmpty(photos)}">
-    <tbody>
-        <tr>
+<div th:with="imgSelected=6">
 
-            <!--<td th:if="${before}"><input th:href="@{/GetPhotos(albumId=${albumId}, set=${set-1})}" type="submit" value="<"></td>-->
-            <td th:if="${before}"><a th:href="@{/GetPhotos(albumId=${albumId}, set=${set-1})}">Back</a></td>
+    <table th:if="${not #lists.isEmpty(photos)}">
+        <tbody>
+            <tr>
 
-            <td th:each="photo : ${photos}">
+                <!--<td th:if="${before}"><input th:href="@{/GetPhotos(albumId=${albumId}, set=${set-1})}" type="submit" value="<"></td>-->
+                <td th:if="${before}"><a th:href="@{/GetPhotos(albumId=${albumId}, set=${set-1})}">Back</a></td>
 
-                <p th:text="${photo.title}">title</p>
-                <img th:href="@{/GetPhotoDetails(albumId=${albumId}, photos=${photos}, set=${set}, before=${before}, next=${next})}" th:src="@{photo.path}" src="../Resources/default.png"/>
+                <td th:each="photo : ${photos}">
 
-            </td>
+                    <p th:text="${photo.title}">title</p>
+                    <img th:onclick="${imgSelected == 2}" th:src="@{photo.path}" src="../Resources/default.png"/>
 
-            <!--<td th:if="${next}"><input th:href="@{/GetPhotos(albumId=${albumId}, set=${set+1})}" type="submit" value=">"></td>-->
-            <td th:if="${next}"><a th:href="@{/GetPhotos(albumId=${albumId}, set=${set+1})}">Next</a></td>
-        </tr>
-    </tbody>
-</table>
-<p th:if="${ #lists.isEmpty(photos)}">No photos yet!</p>
+                </td>
+
+                <!--<td th:if="${next}"><input th:href="@{/GetPhotos(albumId=${albumId}, set=${set+1})}" type="submit" value=">"></td>-->
+                <td th:if="${next}"><a th:href="@{/GetPhotos(albumId=${albumId}, set=${set+1})}">Next</a></td>
+            </tr>
+        </tbody>
+    </table>
+    <p th:if="${ #lists.isEmpty(photos)}">No photos yet!</p>
 
 
 
 
-<table id="photoTable">
-    <caption>Image selected:</caption>
-    <thead>
-        <tr>
-            <th>Title</th>
-        </tr>
-        <tr>
-            <th>Date</th>
-        </tr>
-        <tr>
-            <th>Description</th>
-        </tr>
-        <tr>
-            <th>Image</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td th:text="${photo.title}">title</td>
-        </tr>
-        <tr>
-            <td th:text="${photo.date}">2020-02-02</td>
-        </tr>
-        <tr>
-            <td th:text="${photo.description}">This is a description</td>
-        </tr>
-        <tr>
-            <td><img alt="Forest" th:src="@{photo.path}" src="../Resources/default.png"/></td>
-        </tr>
-    </tbody>
+    <table th:if="${imgSelected < 6}" id="tableDetail">
+        <caption>Image selected:</caption>
 
-    <tfoot>
-        <tr>
-            <!--<td colspan="4">Comments</td>-->
+        <tbody>
+            <tr>
+                <th>Title</th><td th:text="${photos[imgSelected].title}">title</td>
+            </tr>
+            <tr>
+                <th>Date</th><td th:text="${photos[imgSelected].date}">2020-02-02</td>
+            </tr>
+            <tr>
+                <th>Description</th><td th:text="${photos[imgSelected].description}">This is a description</td>
+            </tr>
+            <tr>
+                <th>Image</th><td><img th:src="@{photos[imgSelected].path}" src="../Resources/default.png"/></td>
+            </tr>
+        </tbody>
 
-            <table>
-                <caption>Comments:</caption>
-                <tr th:each="comment : ${photo.comments}">
-                    <td th:text="${comment.user}: ${comment.text}">user: text</td>
-                </tr>
-            </table>
+        <tfoot>
+            <tr>
+                <!--<td colspan="4">Comments</td>-->
 
-        </tr>
-    </tfoot>
-</table>
+                <table>
+                    <caption>Comments:</caption>
+                    <tr th:each="comment : ${photos[imgSelected].comments}">
+                        <td th:text="${comment.username} + ': ' + ${comment.text}">user: text</td>
+                    </tr>
+                </table>
+
+            </tr>
+        </tfoot>
+    </table>
+
+</div>
+
 
 
 </body>
