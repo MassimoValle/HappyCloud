@@ -41,9 +41,11 @@ public class GetPhotos extends HttpServlet {
 
         int albumId;
         int set;
+        int imgSelected;
         try {
             albumId = Integer.parseInt(request.getParameter("albumId"));
             set = Integer.parseInt(request.getParameter("set"));
+            imgSelected = Integer.parseInt(request.getParameter("imgSelected"));
         } catch (NumberFormatException | NullPointerException e) {
             // only for debugging e.printStackTrace();
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Incorrect param values");
@@ -81,6 +83,15 @@ public class GetPhotos extends HttpServlet {
         if(currentSet > 1) before = true;
 
 
+        if(imgSelected < 0) imgSelected = 6;
+
+        else {  // TODO da sistemare con lambda exp
+            for (Photo photo : photos){
+                if(photo.getId() == imgSelected)
+                    imgSelected = photos.indexOf(photo);
+            }
+        }
+
 
         // Redirect to the Home page and add missions to the parameters
         String path = "/albumPage.html";
@@ -89,6 +100,7 @@ public class GetPhotos extends HttpServlet {
         ctx.setVariable("albumId", albumId);
         ctx.setVariable("set", currentSet);
         ctx.setVariable("photos", photos);
+        ctx.setVariable("imgSelected", imgSelected);
         ctx.setVariable("before", before);
         ctx.setVariable("next", next);
         templateEngine.process(path, ctx, response.getWriter());
