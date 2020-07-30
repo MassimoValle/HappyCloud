@@ -25,7 +25,12 @@ public class GetPhotos extends HttpServlet {
     private Connection connection = null;
     private TemplateEngine templateEngine;
 
-    private int currentSet = 0;
+    private int albumId;
+    private int currentSet;
+    private int imgSelected;
+
+
+
 
     public void init() throws ServletException {
         this.templateEngine = ServletUtils.createThymeleafTemplate(getServletContext());
@@ -39,20 +44,32 @@ public class GetPhotos extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        int albumId;
-        int set;
-        int imgSelected;
+        boolean addComment;
+
         try {
-            albumId = Integer.parseInt(request.getParameter("albumId"));
-            set = Integer.parseInt(request.getParameter("set"));
-            imgSelected = Integer.parseInt(request.getParameter("imgSelected"));
-        } catch (NumberFormatException | NullPointerException e) {
-            // only for debugging e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Incorrect param values");
-            return;
+            addComment = (boolean) request.getAttribute("addComment");
+        }
+        catch (NumberFormatException | NullPointerException e) {
+            addComment = false;
         }
 
-        currentSet = set;
+        if(!addComment) {
+
+            try {
+                albumId = Integer.parseInt(request.getParameter("albumId"));
+                currentSet = Integer.parseInt(request.getParameter("set"));
+                imgSelected = Integer.parseInt(request.getParameter("imgSelected"));
+
+            } catch (NumberFormatException | NullPointerException e) {
+                // only for debugging e.printStackTrace();
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Incorrect param values");
+                return;
+            }
+
+        }
+
+        //TODO
+        request.getSession().setAttribute("imgSelected", imgSelected);
 
         AlbumDAO albumDAO = new AlbumDAO(connection);
         List<Photo> photos;

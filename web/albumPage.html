@@ -58,20 +58,31 @@
                 <th>Image</th><td><img th:src="@{photos[imgSelected].path}" src="../Resources/default.png"/></td>
             </tr>
         </tbody>
-
-        <tfoot>
-            <tr>
-
-                <table th:if="${not #lists.isEmpty(photos[imgSelected].comments)}">
-                    <caption>Comments:</caption>
-                    <tr th:each="comment : ${photos[imgSelected].comments}">
-                        <td th:text="${comment.username} + ': ' + ${comment.text}">user: text</td>
-                    </tr>
-                </table>
-
-            </tr>
-        </tfoot>
     </table>
+
+    <div>
+        <tr>
+
+            <table th:if="${not #lists.isEmpty(photos[imgSelected].comments)}">
+                <caption>Comments:</caption>
+                <tr th:each="comment : ${photos[imgSelected].comments}">
+                    <td th:text="${comment.username} + ': ' + ${comment.text}">user: text</td>
+                </tr>
+            </table>
+
+        </tr>
+        <tr>
+            <fieldset>
+                <form id='comment-form' action="AddComment" method='POST'>
+                    <p>Write here to post a comment:</p>
+                    <input type="text" name="comment" placeholder="comment" required>
+                    <button type='submit'>Submit</button>
+                </form>
+            </fieldset>
+
+
+        </tr>
+    </div>
 
 </div>
 
