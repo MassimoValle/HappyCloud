@@ -27,7 +27,7 @@
                 <td th:each="photo : ${photos}">
 
                     <p th:text="${photo.title}">title</p>
-                    <a th:href="@{/GetPhotos(albumId=${albumId}, set=${set}, imgSelected=${photo.id})}"><img th:src="@{photo.path}" src="../Resources/default.png"/></a>
+                    <a th:href="@{/GetPhotos(albumId=${albumId}, set=${set}, imgSelected=${photo.id})}"><img th:src="@{${photo.path}}" src="./photos/default.png" class="thumbnail"/></a>
 
                 </td>
 
@@ -55,7 +55,7 @@
                 <th>Description</th><td th:text="${photos[imgSelected].description}">This is a description</td>
             </tr>
             <tr>
-                <th>Image</th><td><img th:src="@{photos[imgSelected].path}" src="../Resources/default.png"/></td>
+                <th>Image</th><td><img th:src="@{${photos[imgSelected].path}}" src="./photos/default.png" class="original"/></td>
             </tr>
         </tbody>
     </table>
