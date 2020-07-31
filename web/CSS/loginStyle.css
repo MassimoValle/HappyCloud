@@ -1,7 +1,11 @@
 body {
     height: 100%;
     position: relative;
-    /*background-image: url('../Resources/Backgrounds/loginBG.jpg');*/
+    background-image: url('../photos/Backgrounds/BG.jpg');
+    background-position: center center;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
     /*border: 3px solid green;*/
 }
 
@@ -23,9 +27,9 @@ label {
 #divContainer {
     background-color: #CCCCCC;
     /*border: 3px solid orange;*/
-    margin:0 auto;
+    margin: 0 auto;
     width:400px;
-    height: 400px;
+    height: 460px;
 
     align-items: center;
 }
