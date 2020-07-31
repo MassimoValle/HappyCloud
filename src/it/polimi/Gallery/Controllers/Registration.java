@@ -17,15 +17,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.regex.Pattern;
 
 @WebServlet("/Registration")
 public class Registration extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private Connection connection = null;
-    private TemplateEngine templateEngine;
     
     public void init() throws ServletException {
-        this.templateEngine = ServletUtils.createThymeleafTemplate(getServletContext());
         connection = ConnectionHandler.getConnection(getServletContext());
     }
     
@@ -48,27 +47,31 @@ public class Registration extends HttpServlet {
             confPassowrd = request.getParameter("confPassword");
 
             if (username==null || name==null || surname== null || email==null || password==null || confPassowrd==null) {
+
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                invalidCredentials("Registration error: Attributes can't be null", request, response);
+                response.getWriter().println("Registration error: Attributes can't be null");
                 return;
             }
             else if(username.isEmpty() || name.isEmpty() || surname.isEmpty() || email.isEmpty() || password.isEmpty() || confPassowrd.isEmpty()) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                invalidCredentials("Registration error: Attributes can't be empty", request, response);
+                response.getWriter().println("Registration error: Attributes can't be empty");
+                return;
+            }
+            else if (!isEmailValid(email)){
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.getWriter().println("The email isn't valid.");
+                return;
+            }
+            else if (!password.equals(confPassowrd)){
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.getWriter().println("Passwords aren't equal!");
                 return;
             }
 
         } catch (NullPointerException e) {
             e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return;
-        }
-
-
-        if(!password.equals(confPassowrd)){
-            // errore "passwords are different"
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            invalidCredentials("Registration error: Passwords don't match", request, response);
+            response.getWriter().println("Registration error: NullPointerException");
             return;
         }
 
@@ -83,31 +86,38 @@ public class Registration extends HttpServlet {
         } catch (SQLException e) {
             // se exc -> invalid username
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            invalidCredentials("Registration error: Choose another username", request, response);
+            response.getWriter().println("Registration error: Choose another username");
             return;
         }
 
         if (user == null) {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            invalidCredentials("Registration error: Not Possible to check attributes", request, response);
+            response.getWriter().println("Registration error: Not Possible to check attributes");
             return;
         }
 
 
         // se tutto ok:
 
-        String path;
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.getWriter().write(username);
         request.getSession().setAttribute("user", user);
-        path = getServletContext().getContextPath() + "/GoToHome";
-        response.sendRedirect(path);
     }
 
-    private void invalidCredentials(String errorMessage, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String path = "/index.html";
-        ServletContext servletContext = getServletContext();
-        final WebContext webContext = new WebContext(request, response, servletContext, request.getLocale());
-        webContext.setVariable("errorMessage", errorMessage);
-        templateEngine.process(path, webContext, response.getWriter());
+    
+    private boolean isEmailValid(String email)
+    {
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+
+                "[a-zA-Z0-9_+&*-]+)*@" +
+                "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
+                "A-Z]{2,7}$";
+
+        Pattern patternRegex = Pattern.compile(emailRegex);
+
+        if (email == null)
+            return false;
+
+        return patternRegex.matcher(email).matches();
     }
     
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

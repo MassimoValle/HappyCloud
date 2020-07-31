@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<link rel="stylesheet" type="text/css" media="all" href="CSS/loginStyle.css" th:href="@{/CSS/loginStyle.css}" />
-<link rel="stylesheet" type="text/css" media="all" href="CSS/style.css" th:href="@{/CSS/style.css}" />
+<link rel="stylesheet" type="text/css" media="all" href="CSS/loginStyle.css" />
+<link rel="stylesheet" type="text/css" media="all" href="CSS/style.css" />
+
+
 <head>
-<meta charset="ISO-8859-1">
-<title>Login page</title>
+	<meta charset="ISO-8859-1">
+	<title>Login page</title>
+	<script src="js/utils.js" charset="utf-8" defer></script>
+	<script src="js/loginManagement.js" charset="utf-8" defer></script>
 </head>
 
 	<div id="divContainer">
@@ -15,27 +19,27 @@
 			<input type='checkbox' id='form-switch'>
 
 
-			<form id='login-form' action="CheckLogin" method='POST'>
+			<form id='login-form'>
 				<input type="text" name="username" placeholder="Username" required>
 				<input type="password" name="password" placeholder="Password" required>
-				<button type='submit'>Login</button>
+				<button id="loginButton" type='submit'>Login</button>
 
 				<label for='form-switch'><span>Register</span></label>
 
 			</form>
-			<form id='register-form' action="Registration" method='POST'>
+			<form id='register-form'>
 				<input type="text" name="username" placeholder="Username" required>
 				<input type="text" name="name" placeholder="Name" required>
 				<input type="text" name="surname" placeholder="Surname" required>
 				<input type="email" name="email" placeholder="Email" required>
 				<input type="password" name="password" placeholder="Password" required>
 				<input type="password" name="confPassword" placeholder="Re Password" required>
-				<button type='submit'>Register</button>
+				<button id="registrationButton" type='submit'>Register</button>
 
 				<label for='form-switch'>Already Member ? Sign In Now..</label>
 
 			</form>
-			<p class="errorMessage" th:text=" ${errorMessage}"></p>
+			<p id="id_errorMessage" class="errorMessage"></p>
 		</div>
 
 	</div>
