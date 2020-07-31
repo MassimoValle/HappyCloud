@@ -1,39 +1,108 @@
 <!DOCTYPE html>
-<html lang="en"  xmlns:th="http://www.thymeleaf.org">
-<link rel="stylesheet" type="text/css" media="all"
-      href="CSS/style.css" th:href="@{/CSS/style.css}" />
-<head>
-    <meta charset="UTF-8">
-    <title>Home Page</title>
-</head>
-<body>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
 
-<div id="id_logout">
-    <a th:href="@{/Logout}">Logout</a>
-</div>
-<h1>Welcome to the Gallery's Home Page</h1>
-<p th:text="${'Nice to see you again ' + session.user.name + ' ' + session.user.surname}"></p>
+        <title>Home Page</title>
+
+        <script src="js/utils.js" charset="utf-8" defer></script>
+        <script src="js/galleryManagement.js" charset="utf-8" defer></script>
+
+        <link rel="stylesheet" type="text/css" media="all" href="CSS/style.css" />
+    </head>
+    <body>
+
+        <div id="id_logout">
+            <a href="Logout">Logout</a>
+        </div>
+        <h1>Welcome to the Gallery's Home Page</h1>
+        <p>Nice to see you again <span id="id_username"></span></p>
+        <div id="id_mainAlert"></div>
+
+        <div>
+            <h2>Albums:</h2>
+
+            <p id="id_alert_albums"></p>
+            <table id="id_table_albums">
+                <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Date</th>
+                    <th>Link</th>
+                </tr>
+                </thead>
+                <tbody id="id_tableBody_albums"></tbody>
+            </table>
+        </div>
 
 
-<h2>Albums:</h2>
-<table th:if="${not #lists.isEmpty(albums)}">
-    <thead>
-    <tr>
-        <th>Title</th>
-        <th>Date</th>
-        <th>Link</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="album : ${albums}">
-        <td th:text="${album.title}">title</td>
-        <td th:text="${album.date}">date</td>
-        <td><a th:href="@{/GetPhotos(albumId=${album.id}, set=1, imgSelected=-1)}">Show</a></td>
-    </tr>
-    </tbody>
-</table>
-<p th:if="${ #lists.isEmpty(albums)}">No albums yet!</p>
+        <div>
+            <p id="id_alert_photos"></p>
+            <table id="id_table_photos">
+                <tbody>
+                    <tr id="id_tr_albums"><!--
+
+                        <td id="id_btn_before"><input type="submit" value="<"></td>
+
+                        <td th:each="photo : ${photos}">
+
+                            <p th:text="${photo.title}">title</p>
+                            <a th:href="@{/GetPhotos(albumId=${albumId}, set=${set}, imgSelected=${photo.id})}"><img th:src="@{${photo.path}}" src="./photos/default.png" th:class="thumbnail" class="thumbnail"/></a>
+
+                        </td>
+
+                        <td id="id_btn_next"><input type="submit" value=">"></td>
+
+                    --></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="vertical_flow">
+            <table id=id_tableDetails_photo">
+                <caption><h3>Image selected:</h3></caption>
+
+                <tbody>
+                    <tr>
+                        <th>Title</th><td>title</td>    <!-- prendo i td tramite selettore -->
+                    </tr>
+                    <tr>
+                        <th>Date</th><td>2020-02-02</td>
+                    </tr>
+                    <tr>
+                        <th>Description</th><td>This is a description</td>
+                    </tr>
+                    <tr>
+                        <th>Image</th><td><img src="./photos/default.png" class="original"/></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="vertical_flow">
+            <tr>
+
+                <table id=id_table_comments">
+                    <caption><h3>Comments:</h3></caption>
+                    <tr id="id_tr_addComments"><!--
+                        <td th:text="${comment.username} + ': ' + ${comment.text}">user: text</td>
+                    --></tr>
+                </table>
+
+            </tr>
+            <tr>
+                <fieldset>
+                    <form id='comment-form'>
+                        <p>Write here to post a comment:</p>
+                        <input type="text" name="comment" placeholder="comment" required>
+                        <button type='submit'>Submit</button>
+                    </form>
+                </fieldset>
 
 
-</body>
+            </tr>
+        </div>
+
+
+    </body>
 </html>

@@ -1,51 +1,55 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<link rel="stylesheet" type="text/css" media="all" href="CSS/loginStyle.css" />
-<link rel="stylesheet" type="text/css" media="all" href="CSS/style.css" />
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+
+		<title>Login page</title>
+
+		<script src="js/utils.js" charset="utf-8" defer></script>
+		<script src="js/loginManagement.js" charset="utf-8" defer></script>
+		<script src="js/registrationManagement.js" charset="utf-8" defer></script>
+
+		<link rel="stylesheet" type="text/css" media="all" href="CSS/loginStyle.css" />
+		<link rel="stylesheet" type="text/css" media="all" href="CSS/style.css" />
+	</head>
 
 
-<head>
-	<meta charset="ISO-8859-1">
-	<title>Login page</title>
-	<script src="js/utils.js" charset="utf-8" defer></script>
-	<script src="js/loginManagement.js" charset="utf-8" defer></script>
-</head>
+	<body>
 
-	<div id="divContainer">
+		<div id="divContainer">
 
-		<div id="divFields">
-			<h1>Photo Gallery</h1>
+			<div id="divFields">
+				<h1>Photo Gallery</h1>
 
-			<input type='checkbox' id='form-switch'>
+				<input type='checkbox' id='form-switch'>
 
 
-			<form id='login-form'>
-				<input type="text" name="username" placeholder="Username" required>
-				<input type="password" name="password" placeholder="Password" required>
-				<button id="loginButton" type='submit'>Login</button>
+				<form id='login-form'>
+					<input type="text" name="username" placeholder="Username" required>
+					<input type="password" name="password" placeholder="Password" required>
+					<button id="loginButton" type='submit'>Login</button>
 
-				<label for='form-switch'><span>Register</span></label>
+					<label for='form-switch'><span>Register</span></label>
+				</form>
 
-			</form>
-			<form id='register-form'>
-				<input type="text" name="username" placeholder="Username" required>
-				<input type="text" name="name" placeholder="Name" required>
-				<input type="text" name="surname" placeholder="Surname" required>
-				<input type="email" name="email" placeholder="Email" required>
-				<input type="password" name="password" placeholder="Password" required>
-				<input type="password" name="confPassword" placeholder="Re Password" required>
-				<button id="registrationButton" type='submit'>Register</button>
+				<form id='register-form'>
+					<input type="text" name="username" placeholder="Username" required>
+					<input type="text" name="name" placeholder="Name" required>
+					<input type="text" name="surname" placeholder="Surname" required>
+					<input type="email" name="email" placeholder="Email" required>
+					<input type="password" name="password" placeholder="Password" required>
+					<input type="password" name="confPassword" placeholder="Re Password" required>
+					<button id="registrationButton" type='submit'>Register</button>
 
-				<label for='form-switch'>Already Member ? Sign In Now..</label>
+					<label for='form-switch'>Already Member ? Sign In Now..</label>
+				</form>
 
-			</form>
-			<p id="id_errorMessage" class="errorMessage"></p>
+				<p id="id_errorMessage" class="errorMessage"></p>
+
+			</div>
+
 		</div>
 
-	</div>
-
-
-
-
-</body>
+	</body>
 </html>
