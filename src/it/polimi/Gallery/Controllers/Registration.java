@@ -49,12 +49,12 @@ public class Registration extends HttpServlet {
 
             if (username==null || name==null || surname== null || email==null || password==null || confPassowrd==null) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                invalidCredentials("Attributes can't be null", request, response);
+                invalidCredentials("Registration error: Attributes can't be null", request, response);
                 return;
             }
             else if(username.isEmpty() || name.isEmpty() || surname.isEmpty() || email.isEmpty() || password.isEmpty() || confPassowrd.isEmpty()) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                invalidCredentials("Attributes can't be empty", request, response);
+                invalidCredentials("Registration error: Attributes can't be empty", request, response);
                 return;
             }
 
@@ -67,7 +67,8 @@ public class Registration extends HttpServlet {
 
         if(!password.equals(confPassowrd)){
             // errore "passwords are different"
-            invalidCredentials("Passwords don't match", request, response);
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            invalidCredentials("Registration error: Passwords don't match", request, response);
             return;
         }
 
@@ -80,12 +81,15 @@ public class Registration extends HttpServlet {
             // provo ad aggiungere l'utente al db, poichè username è attributo unico, ritorna null se già presente
             user = userDao.registerUser(username, name, surname, email, password);
         } catch (SQLException e) {
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Not Possible to check attributes");
+            // se exc -> invalid username
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            invalidCredentials("Registration error: Choose another username", request, response);
             return;
         }
 
-        if (user == null) { // se null -> invalid username
-            invalidCredentials("Choose another username", request, response);
+        if (user == null) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            invalidCredentials("Registration error: Not Possible to check attributes", request, response);
             return;
         }
 
@@ -94,7 +98,6 @@ public class Registration extends HttpServlet {
 
         String path;
         request.getSession().setAttribute("user", user);
-        //request.getServletContext().setAttribute("user", user);
         path = getServletContext().getContextPath() + "/GoToHome";
         response.sendRedirect(path);
     }

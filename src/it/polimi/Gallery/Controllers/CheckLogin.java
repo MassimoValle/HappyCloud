@@ -50,12 +50,12 @@ public class CheckLogin extends HttpServlet {
 
             if (username==null || password==null) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                invalidCredentials("Credentials can't be null", request, response);
+                invalidCredentials("Login error: Credentials can't be null", request, response);
                 return;
             }
             else if(username.isEmpty() || password.isEmpty()) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                invalidCredentials("Credentials can't be empty", request, response);
+                invalidCredentials("Login error: Credentials can't be empty", request, response);
                 return;
             }
 
@@ -72,7 +72,7 @@ public class CheckLogin extends HttpServlet {
         try {
             user = userDao.checkUser(username, password);
         } catch (SQLException e) {
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Not Possible to check credentials");
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Login error: Not Possible to check credentials");
             return;
         }
 
@@ -81,7 +81,7 @@ public class CheckLogin extends HttpServlet {
         // show login page with error message
 
         if (user == null) {
-            invalidCredentials("Incorrect username or password", request, response);
+            invalidCredentials("Login error: Incorrect username or password", request, response);
             return;
         }
 

@@ -1,3 +1,14 @@
+body {
+    height: 100%;
+    position: relative;
+    background-image: url('../photos/Backgrounds/BG.jpg');
+    background-position: center center;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    /*border: 3px solid green;*/
+}
+
 .thumbnail {
   border: 1px solid #ddd;
   border-radius: 4px;
@@ -13,7 +24,13 @@
   width: 100%;
 }
 
+
+
 #id_backToHome {
     margin-left: 2%;
     float: left;
+}
+
+.vertical_flow {
+    padding-top: 35px;
 }
