@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.regex.Pattern;
 
 @WebServlet("/Registration")
 public class Registration extends HttpServlet {
@@ -57,18 +58,21 @@ public class Registration extends HttpServlet {
                 invalidCredentials("Registration error: Attributes can't be empty", request, response);
                 return;
             }
+            else if (!isEmailValid(email)){
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                invalidCredentials("Registration error: The email isn't valid", request, response);
+                return;
+            }
+            else if (!password.equals(confPassowrd)){
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                invalidCredentials("Registration error: Passwords don't match", request, response);
+
+                return;
+            }
 
         } catch (NullPointerException e) {
             e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return;
-        }
-
-
-        if(!password.equals(confPassowrd)){
-            // errore "passwords are different"
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            invalidCredentials("Registration error: Passwords don't match", request, response);
             return;
         }
 
@@ -108,6 +112,21 @@ public class Registration extends HttpServlet {
         final WebContext webContext = new WebContext(request, response, servletContext, request.getLocale());
         webContext.setVariable("errorMessage", errorMessage);
         templateEngine.process(path, webContext, response.getWriter());
+    }
+
+    private boolean isEmailValid(String email)
+    {
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+
+                "[a-zA-Z0-9_+&*-]+)*@" +
+                "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
+                "A-Z]{2,7}$";
+
+        Pattern patternRegex = Pattern.compile(emailRegex);
+
+        if (email == null)
+            return false;
+
+        return patternRegex.matcher(email).matches();
     }
     
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
