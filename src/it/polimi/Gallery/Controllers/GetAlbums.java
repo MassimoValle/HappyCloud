@@ -1,5 +1,7 @@
 package it.polimi.Gallery.Controllers;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import it.polimi.Gallery.Beans.Album;
 import it.polimi.Gallery.Dao.AlbumDAO;
 import it.polimi.Gallery.Utils.ConnectionHandler;
@@ -18,15 +20,13 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-@WebServlet("/GoToHome")
-public class GoToHome extends HttpServlet {
+@WebServlet("/GetAlbums")
+public class GetAlbums extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
-    private TemplateEngine templateEngine;
     private Connection connection = null;
 
     public void init() throws ServletException {
-        this.templateEngine = ServletUtils.createThymeleafTemplate(getServletContext());
         connection = ConnectionHandler.getConnection(getServletContext());
     }
 
@@ -40,18 +40,18 @@ public class GoToHome extends HttpServlet {
 
         } catch (SQLException e) {
 
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Not possible to recover meetings");
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.getWriter().println("Not possible to recover albums");
             return;
         }
 
-        // Redirect to the Home page and add missions to the parameters
-        String path = "/home.html";
-        ServletContext servletContext = getServletContext();
-        final WebContext webContext = new WebContext(request, response, servletContext, request.getLocale());
+        Gson gson = new GsonBuilder().setDateFormat("yyyy MMM dd").create();
+        String json_albums = gson.toJson(albums);
 
-        webContext.setVariable("albums", albums);
 
-        templateEngine.process(path, webContext, response.getWriter());
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(json_albums);
 
     }
 

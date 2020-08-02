@@ -9,17 +9,20 @@
         <script src="js/galleryManagement.js" charset="utf-8" defer></script>
 
         <link rel="stylesheet" type="text/css" media="all" href="CSS/style.css" />
+        <link rel="stylesheet" type="text/css" media="all" href="CSS/albumStyle.css" />
     </head>
     <body>
 
-        <div id="id_logout">
-            <a href="Logout">Logout</a>
+        <div>   <!-- div per la parte alta -->
+            <div id="id_logout">
+                <a href="Logout">Logout</a>
+            </div>
+            <h1>Welcome to the Gallery's Home Page</h1>
+            <p>Nice to see you again <span id="id_username"></span></p>
+            <div id="id_mainAlert"></div>
         </div>
-        <h1>Welcome to the Gallery's Home Page</h1>
-        <p>Nice to see you again <span id="id_username"></span></p>
-        <div id="id_mainAlert"></div>
 
-        <div>
+        <div>   <!-- div per la tabella con gli album -->
             <h2>Albums:</h2>
 
             <p id="id_alert_albums"></p>
@@ -36,7 +39,7 @@
         </div>
 
 
-        <div>
+        <div>   <!-- div per la tabella con le 5 foto -->
             <p id="id_alert_photos"></p>
             <table id="id_table_photos">
                 <tbody>
@@ -58,7 +61,7 @@
             </table>
         </div>
 
-        <div class="vertical_flow">
+        <div class="vertical_flow">    <!-- div per la tabella di dettaglio -->
             <table id=id_tableDetails_photo">
                 <caption><h3>Image selected:</h3></caption>
 
@@ -79,7 +82,7 @@
             </table>
         </div>
 
-        <div class="vertical_flow">
+        <div class="vertical_flow">   <!-- div per la parte dei commenti -->
             <tr>
 
                 <table id=id_table_comments">
@@ -102,7 +105,6 @@
 
             </tr>
         </div>
-
 
     </body>
 </html>
