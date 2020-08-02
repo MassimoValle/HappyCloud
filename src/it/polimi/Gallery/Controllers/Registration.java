@@ -99,9 +99,10 @@ public class Registration extends HttpServlet {
 
         // se tutto ok:
 
+        request.getSession().setAttribute("user", user);
         response.setStatus(HttpServletResponse.SC_OK);
         response.getWriter().write(username);
-        request.getSession().setAttribute("user", user);
+
     }
 
     

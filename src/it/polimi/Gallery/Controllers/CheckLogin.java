@@ -27,12 +27,10 @@ public class CheckLogin extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
     private Connection connection = null;
-    private TemplateEngine templateEngine;
 
 
     public void init() throws ServletException {
 
-        this.templateEngine = ServletUtils.createThymeleafTemplate(getServletContext());
         connection = ConnectionHandler.getConnection(getServletContext());
     }
 
@@ -42,7 +40,6 @@ public class CheckLogin extends HttpServlet {
         // obtain and escape params
         String username;
         String password;
-        String path;
 
         try {
             username = request.getParameter("username");
@@ -50,17 +47,16 @@ public class CheckLogin extends HttpServlet {
 
             if (username==null || password==null) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                invalidCredentials("Login error: Credentials can't be null", request, response);
+                response.getWriter().println("Login error: Credentials can't be null");
                 return;
             }
             else if(username.isEmpty() || password.isEmpty()) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                invalidCredentials("Login error: Credentials can't be empty", request, response);
+                response.getWriter().println("Login error: Credentials can't be empty");
                 return;
             }
 
         } catch (NullPointerException e) {
-            e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
@@ -72,7 +68,8 @@ public class CheckLogin extends HttpServlet {
         try {
             user = userDao.checkUser(username, password);
         } catch (SQLException e) {
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Login error: Not Possible to check credentials");
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.getWriter().println("Internal server error, retry later");
             return;
         }
 
@@ -81,22 +78,15 @@ public class CheckLogin extends HttpServlet {
         // show login page with error message
 
         if (user == null) {
-            invalidCredentials("Login error: Incorrect username or password", request, response);
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().println("Login error: Incorrect credentials");
             return;
         }
 
         request.getSession().setAttribute("user", user);
-        //request.getServletContext().setAttribute("user", user);
-        path = getServletContext().getContextPath() + "/GoToHome";
-        response.sendRedirect(path);
-    }
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.getWriter().write(username);
 
-    private void invalidCredentials(String errorMessage, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String path = "/index.html";
-        ServletContext servletContext = getServletContext();
-        final WebContext webContext = new WebContext(request, response, servletContext, request.getLocale());
-        webContext.setVariable("errorMessage", errorMessage);
-        templateEngine.process(path, webContext, response.getWriter());
     }
     
     public void destroy() {
