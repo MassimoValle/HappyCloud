@@ -2,6 +2,13 @@
 
 
     let albumTable;
+    let photoTable;
+    let photoDetailsTable;
+    let commentsTable;
+    let commentForm;
+
+    let currentSet = 1;
+    let photos;
 
     // load event
     window.addEventListener("load", () => {
@@ -15,7 +22,6 @@
     function PageOrchestrator() {
 
         let mainAlert = document.getElementById("id_mainAlert");
-        let alertAlbumTable = document.getElementById("id_alert_albums");
 
 
         // FUNZIONI
@@ -30,15 +36,39 @@
 
 
             albumTable = new AlbumTable(
-                alertAlbumTable,
+                document.getElementById("id_alert_albums"),
                 document.getElementById("id_table_albums"),
                 document.getElementById("id_tableBody_albums"));
+
+            photoTable = new PhotoTable(
+                document.getElementById("id_alert_photos"),
+                document.getElementById("id_table_photos"),
+                document.getElementById("id_tableBody_photos"));
+
+            photoDetailsTable = new PhotoDetailsTable(
+                document.getElementById("id_alert_photoDetails"),
+                document.getElementById("id_table_photoDetails"),
+                document.getElementById("id_tableBody_photoDetails"));
+
+            commentsTable = new CommentsTable(
+                document.getElementById("id_alert_comments"),
+                document.getElementById("id_table_comments"),
+                document.getElementById("id_tableBody_comments"));
+
+            commentForm = new CommentForm(
+                document.getElementById("id_fieldset_comment"),
+                document.getElementById("id_form_comment"));
 
         };
 
 
         this.refresh = function() {
             albumTable.reset();
+            photoTable.reset();
+            photoDetailsTable.reset();
+            commentsTable.reset();
+            commentForm.reset();
+
         };
     }
 
@@ -57,6 +87,7 @@
 
         this.reset = function () {
 
+            this.listcontainerbody.innerHTML = "";
             this.listcontainer.style.visibility = "hidden";
 
             let albumController = new AlbumController(this.alert);
@@ -64,16 +95,13 @@
         }
 
         // chiama la update() se meeting non è vuota, altrimenti stampa l'alert
-        this.show = function (albums, autoclick) {
+        this.show = function (albums) {
 
             const self = this;
 
             // se albums non è vuota...
             if (albums.length !== 0){
-
                 self.update(albums);
-                if (autoclick) self.autoclick(); // mostra il primo album della tabella
-
             }
             else this.alert.textContent = "No albums yet!";
         };
@@ -119,12 +147,8 @@
 
                         e.preventDefault();
 
-                        if(selectedCell !== undefined) selectedCell.className = ""; // entra solo la prima volta
+                        photoTable.init(e.target.getAttribute("albumId"));
 
-                        selectedCell = e.target.closest("td");
-                        selectedCell.className = "detailSelected";  // colora di giallo la cella
-
-                        meetingDetails.show(e.target.getAttribute("albumId")); // the list must know the details container
                     }, false);
 
                     anchor.href = "#";
@@ -139,17 +163,275 @@
             }
         }
 
-        this.autoclick = function (albumId) {
+    }
 
-            var e = new Event("click"); // crea l'evento
-            var selector = "a[albumId='" + albumId + "']";
+    function PhotoTable(_alert, _listcontainer, _listcontainerbody) {
+        this.alert = _alert;
+        this.listcontainer = _listcontainer;            // intera tabella html dei meetings
+        this.listcontainerbody = _listcontainerbody;    // solo il body della tabella html dei meetings
 
-            var anchorToClick = (albumId) // se meetingId != undefined..
-                ? document.querySelector(selector)  // ..allora prendi l'ancora relariva al meetingId
-                : this.listcontainerbody.querySelectorAll("a")[0];  // ..altrimenti prendi la prima ancora della tabella
+        this.reset = function () {
 
-            anchorToClick.dispatchEvent(e); // avvia l'evento
+            this.listcontainerbody.innerHTML = "";
+            this.listcontainer.style.visibility = "hidden";
         }
+
+        this.init = function (albumId) {
+
+            let photoController = new PhotoController(this.alert);
+            photoController.getPhotos(albumId);
+        }
+
+        // chiama la update() se meeting non è vuota, altrimenti stampa l'alert
+        this.show = function (photos) {
+
+            const self = this;
+
+            // se albums non è vuota...
+            if (photos.length !== 0){
+
+                self.update(photos);
+
+            }
+            else this.alert.textContent = "No photos yet!";
+        };
+
+        // compila la tabella con i meetings che il server gli fornisce
+        this.update = function (photos) {
+
+            const l = photos.length;
+            let row;
+
+            if (l === 0) {  // controllo inutile ma per sicurezza XD
+                alert.textContent = "No photos yet!";
+
+            } else {
+                this.listcontainerbody.innerHTML = ""; // svuota il body della tabella
+                this.alert.textContent = "";
+
+                const self = this;
+
+                row = document.createElement("tr");
+
+                if(currentSet > 1){
+
+                    let backBtn = document.createElement("input");
+                    backBtn.value = "<";
+                    backBtn.addEventListener("click", (e) => {
+
+                        e.preventDefault();
+                            currentSet = currentSet-1;
+                            self.update(photos);
+
+                        }, false);
+
+                    let cell = document.createElement("td");
+                    cell.appendChild(backBtn);
+                    row.appendChild(cell);
+                }
+
+
+                let index = (currentSet-1) * 5;
+
+                for (let i = 0; i < 5 && index < l; i++) {
+
+                    let photo = photos[index];
+
+                    let cell = document.createElement("td");
+
+                    let title = document.createElement("p");
+                    title.textContent = photo.title;
+
+                    let anchor = document.createElement("a");
+                        let image = document.createElement("img");
+                        image.className = "thumbnail";
+                        image.src = photo.path;
+                    anchor.appendChild(image);
+                    anchor.setAttribute('photoId', photo.id);
+
+                    anchor.addEventListener("click", (e) => {
+
+                        e.preventDefault();
+
+                        let img = e.target;
+                        let a = img.parentElement;
+
+                        let arg = a.getAttribute("photoId");
+
+                        photoDetailsTable.show(arg);
+
+                     }, false);
+
+                    cell.appendChild(title);
+                    cell.appendChild(anchor);
+
+                    row.appendChild(cell);
+
+                    index++;
+
+                }
+
+                if(photos.length > currentSet*5){
+
+                    let nextBtn = document.createElement("input");
+                    nextBtn.value = ">";
+                    nextBtn.addEventListener("click", (e) => {
+
+                        e.preventDefault();
+                        currentSet = currentSet+1;
+                        self.update(photos);
+
+                    }, false);
+
+                    let cell = document.createElement("td");
+                    cell.appendChild(nextBtn);
+                    row.appendChild(cell);
+
+                }
+
+
+                self.listcontainerbody.appendChild(row);
+                this.listcontainer.style.visibility = "visible";
+            }
+        }
+
+    }
+
+    function PhotoDetailsTable(_alert, _listcontainer, _listcontainerbody) {
+        this.alert = _alert;
+        this.listcontainer = _listcontainer;            // intera tabella html dei meetings
+        this.listcontainerbody = _listcontainerbody;    // solo il body della tabella html dei meetings
+
+        this.reset = function () {
+
+            this.listcontainer.style.visibility = "hidden";
+        }
+
+
+        // chiama la update() se meeting non è vuota, altrimenti stampa l'alert
+        this.show = function (photoId) {
+
+            const self = this;
+
+            let photoSelected;
+
+            photos.forEach(function (photo) {
+                if(photo.id == photoId){
+                    photoSelected = photo;
+                }
+            });
+
+            if (photoSelected !== undefined){
+
+                self.update(photoSelected);
+                
+                commentsTable.reset();
+                commentsTable.show(photoSelected.comments);
+
+            }
+            else this.alert.textContent = "Problem on showing details";
+        };
+
+
+        this.searchPhoto = function (photoId) {
+            photos.forEach(function (photo) {
+                if(photo.id == photoId){
+                    return photo;
+                }
+            });
+        }
+
+
+        this.update = function (photo) {
+
+            this.alert.textContent = "";
+
+            const self = this;
+
+            let idTitle = document.getElementById("id_title_photoDetails");
+            let idDate = document.getElementById("id_date_photoDetails");
+            let idDescription = document.getElementById("id_description_photoDetails");
+            let idImage = document.getElementById("id_image_photoDetails");
+
+
+            idTitle.textContent = photo.title;
+            idDate.textContent = photo.date;
+            idDescription.textContent = photo.description;
+            idImage.src = photo.path;
+
+            this.listcontainer.style.visibility = "visible";
+        }
+
+    }
+
+    function CommentsTable(_alert, _listcontainer, _listcontainerbody) {
+        this.alert = _alert;
+        this.listcontainer = _listcontainer;            // intera tabella html dei meetings
+        this.listcontainerbody = _listcontainerbody;    // solo il body della tabella html dei meetings
+
+        this.reset = function () {
+
+            this.listcontainerbody.innerHTML = "";
+            this.listcontainer.style.visibility = "hidden";
+        }
+
+        // chiama la update() se meeting non è vuota, altrimenti stampa l'alert
+        this.show = function (comments) {
+
+            const self = this;
+
+            // se albums non è vuota...
+            if (comments.length !== 0){
+                self.update(comments);
+                commentForm.show();
+            }
+            else this.alert.textContent = "No comments yet!";
+        };
+
+        // compila la tabella con i meetings che il server gli fornisce
+        this.update = function (comments) {
+
+            var l = comments.length;
+            let row, commentCell;
+
+            if (l === 0) {  // controllo inutile ma per sicurezza XD
+                alert.textContent = "No comments yet!";
+
+            } else {
+                this.listcontainerbody.innerHTML = ""; // svuota il body della tabella
+                this.alert.textContent = "";
+
+                const self = this;
+
+                comments.forEach(function (comment) {
+
+                    row = document.createElement("tr");
+
+                    // prima cella della riga (titolo)
+                    commentCell = document.createElement("td");
+                    commentCell.textContent = comment.username + ": " + comment.text;
+                    row.appendChild(commentCell);
+
+                    self.listcontainerbody.appendChild(row);
+                });
+                this.listcontainer.style.visibility = "visible";
+            }
+        }
+
+    }
+
+    function CommentForm(_listcontainer, _listcontainerbody) {
+        this.listcontainer = _listcontainer;
+        this.listcontainerbody = _listcontainerbody;
+
+        this.reset = function () {
+            this.listcontainer.style.visibility = "hidden";
+        }
+
+        // chiama la update() se meeting non è vuota, altrimenti stampa l'alert
+        this.show = function () {
+            this.listcontainer.style.visibility = "visible";
+        };
 
     }
 
@@ -157,7 +439,7 @@
         this.alert = _alert;
 
         // richiede al server tutti i meeting, sia quelli che ho creato che quelli a cui partecipo
-        this.getAlbums = function(currentAlbum) {
+        this.getAlbums = function() {
 
             var self = this;
 
@@ -170,7 +452,36 @@
                         if (req.status === 200) {
 
                             let albums = JSON.parse(message);
-                            albumTable.show(albums, function() {albumTable.autoclick(currentAlbum);});
+                            albumTable.show(albums);
+
+
+                        } else {
+                            self.alert.textContent = message;
+                        }
+                    }
+                }
+            );
+        }
+    }
+
+    function PhotoController(_alert) {
+        this.alert = _alert;
+
+        // richiede al server tutti i meeting, sia quelli che ho creato che quelli a cui partecipo
+        this.getPhotos = function(albumId) {
+
+            var self = this;
+
+            makeCall("GET", "GetPhotos?albumId=" + albumId, null,
+                function (req) {
+                    if (req.readyState === XMLHttpRequest.DONE) {
+
+                        let message = req.responseText;
+
+                        if (req.status === 200) {
+
+                            photos = JSON.parse(message);
+                            photoTable.show(photos);
 
 
                         } else {

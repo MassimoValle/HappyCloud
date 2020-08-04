@@ -42,60 +42,65 @@
         <div>   <!-- div per la tabella con le 5 foto -->
             <p id="id_alert_photos"></p>
             <table id="id_table_photos">
-                <tbody>
-                    <tr id="id_tr_albums"><!--
+                <tbody id="id_tableBody_photos">
+                <!--<tr>
 
-                        <td id="id_btn_before"><input type="submit" value="<"></td>
+                    <td id="id_btn_before"><input type="submit" value="<"></td>
 
-                        <td th:each="photo : ${photos}">
+                    <td th:each="photo : ${photos}">
 
-                            <p th:text="${photo.title}">title</p>
-                            <a th:href="@{/GetPhotos(albumId=${albumId}, set=${set}, imgSelected=${photo.id})}"><img th:src="@{${photo.path}}" src="./photos/default.png" th:class="thumbnail" class="thumbnail"/></a>
+                        <p th:text="${photo.title}">title</p>
+                        <a th:href="@{/GetPhotos(albumId=${albumId}, set=${set}, imgSelected=${photo.id})}"><img th:src="@{${photo.path}}" src="./photos/default.png" th:class="thumbnail" class="thumbnail"/></a>
 
-                        </td>
+                    </td>
 
-                        <td id="id_btn_next"><input type="submit" value=">"></td>
+                    <td id="id_btn_next"><input type="submit" value=">"></td>
 
-                    --></tr>
+                </tr> -->
                 </tbody>
             </table>
         </div>
 
+        <p id="id_alert_photoDetails"></p>
         <div class="vertical_flow">    <!-- div per la tabella di dettaglio -->
-            <table id=id_tableDetails_photo">
+            <table id="id_table_photoDetails">
                 <caption><h3>Image selected:</h3></caption>
 
-                <tbody>
+                <tbody id="id_tableBody_photoDetails">
                     <tr>
-                        <th>Title</th><td>title</td>    <!-- prendo i td tramite selettore -->
+                        <th>Title</th><td id="id_title_photoDetails">title</td>    <!-- prendo i td tramite selettore -->
                     </tr>
                     <tr>
-                        <th>Date</th><td>2020-02-02</td>
+                        <th>Date</th><td id="id_date_photoDetails">2020-02-02</td>
                     </tr>
                     <tr>
-                        <th>Description</th><td>This is a description</td>
+                        <th>Description</th><td id="id_description_photoDetails">This is a description</td>
                     </tr>
                     <tr>
-                        <th>Image</th><td><img src="./photos/default.png" class="original"/></td>
+                        <th>Image</th><td><img id="id_image_photoDetails" src="./photos/default.png" class="original"/></td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
+        <p id="id_alert_comments"></p>
         <div class="vertical_flow">   <!-- div per la parte dei commenti -->
             <tr>
 
-                <table id=id_table_comments">
+                <table id="id_table_comments">
                     <caption><h3>Comments:</h3></caption>
-                    <tr id="id_tr_addComments"><!--
+                    <tbody id="id_tableBody_comments">
+                    <!--<tr>
                         <td th:text="${comment.username} + ': ' + ${comment.text}">user: text</td>
-                    --></tr>
+                    </tr>-->
+                    </tbody>
+
                 </table>
 
             </tr>
             <tr>
-                <fieldset>
-                    <form id='comment-form'>
+                <fieldset id="id_fieldset_comment">
+                    <form id="id_form_comment">
                         <p>Write here to post a comment:</p>
                         <input type="text" name="comment" placeholder="comment" required>
                         <button type='submit'>Submit</button>

@@ -5,11 +5,7 @@ import com.google.gson.GsonBuilder;
 import it.polimi.Gallery.Beans.Album;
 import it.polimi.Gallery.Dao.AlbumDAO;
 import it.polimi.Gallery.Utils.ConnectionHandler;
-import it.polimi.Gallery.Utils.ServletUtils;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.WebContext;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;

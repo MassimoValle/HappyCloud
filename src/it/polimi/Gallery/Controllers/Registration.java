@@ -4,11 +4,7 @@ package it.polimi.Gallery.Controllers;
 import it.polimi.Gallery.Beans.User;
 import it.polimi.Gallery.Dao.UserDAO;
 import it.polimi.Gallery.Utils.ConnectionHandler;
-import it.polimi.Gallery.Utils.ServletUtils;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.WebContext;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;

@@ -1,13 +1,11 @@
 package it.polimi.Gallery.Controllers;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import it.polimi.Gallery.Beans.Photo;
 import it.polimi.Gallery.Dao.AlbumDAO;
 import it.polimi.Gallery.Utils.ConnectionHandler;
-import it.polimi.Gallery.Utils.ServletUtils;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.WebContext;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -23,7 +21,6 @@ public class GetPhotos extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
     private Connection connection = null;
-    private TemplateEngine templateEngine;
 
     private int albumId;
     private int currentSet;
@@ -33,7 +30,6 @@ public class GetPhotos extends HttpServlet {
 
 
     public void init() throws ServletException {
-        this.templateEngine = ServletUtils.createThymeleafTemplate(getServletContext());
         connection = ConnectionHandler.getConnection(getServletContext());
     }
 
@@ -44,37 +40,20 @@ public class GetPhotos extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        boolean addComment;
-
         try {
-            addComment = (boolean) request.getAttribute("addComment");
-        }
-        catch (NumberFormatException | NullPointerException e) {
-            addComment = false;
-        }
+            albumId = Integer.parseInt(request.getParameter("albumId"));
 
-        if(!addComment) {
-
-            try {
-                albumId = Integer.parseInt(request.getParameter("albumId"));
-                currentSet = Integer.parseInt(request.getParameter("set"));
-                imgSelected = Integer.parseInt(request.getParameter("imgSelected"));
-
-            } catch (NumberFormatException | NullPointerException e) {
-                // only for debugging e.printStackTrace();
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Incorrect param values");
-                return;
-            }
-
+        } catch (NumberFormatException | NullPointerException e) {
+            // only for debugging e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Incorrect param value");
+            return;
         }
 
-        //TODO
-        request.getSession().setAttribute("imgSelected", imgSelected);
 
         AlbumDAO albumDAO = new AlbumDAO(connection);
         List<Photo> photos;
         try {
-            photos = albumDAO.getFivePhotos(albumId, currentSet);
+            photos = albumDAO.getPhotos(albumId);
             if (photos == null) {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "Resource not found");
                 return;
@@ -84,43 +63,14 @@ public class GetPhotos extends HttpServlet {
             return;
         }
 
-        boolean before = false;
-        boolean next = false;
+
+        Gson gson = new GsonBuilder().setDateFormat("yyyy MMM dd").create();
+        String json_photos = gson.toJson(photos);
 
 
-        if(photos.size() < 5) next = false;
-        else {  // check if there are other photo after those 5
-            try {
-                next = albumDAO.hasNext(albumId, currentSet);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-
-        if(currentSet > 1) before = true;
-
-
-        if(imgSelected < 0) imgSelected = 6;
-
-        else {  // TODO da sistemare con lambda exp
-            for (Photo photo : photos){
-                if(photo.getId() == imgSelected)
-                    imgSelected = photos.indexOf(photo);
-            }
-        }
-
-
-        // Redirect to the Home page and add missions to the parameters
-        String path = "/albumPage.html";
-        ServletContext servletContext = getServletContext();
-        final WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
-        ctx.setVariable("albumId", albumId);
-        ctx.setVariable("set", currentSet);
-        ctx.setVariable("photos", photos);
-        ctx.setVariable("imgSelected", imgSelected);
-        ctx.setVariable("before", before);
-        ctx.setVariable("next", next);
-        templateEngine.process(path, ctx, response.getWriter());
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(json_photos);
     }
 
 

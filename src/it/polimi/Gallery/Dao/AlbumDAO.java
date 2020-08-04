@@ -48,18 +48,17 @@ public class AlbumDAO {
         return albums;
     }
 
-    public List<Photo> getFivePhotos(int albumId, int currentSet) throws SQLException {
+    public List<Photo> getPhotos(int albumId) throws SQLException {
 
         List<Photo> photos = new ArrayList<>();
 
         String query = "SELECT * FROM db_Gallery_TIW2020.Image " +
-                         "WHERE AlbumId = ? ORDER BY Date DESC LIMIT 5 OFFSET ?";
+                         "WHERE AlbumId = ? ORDER BY Date DESC";
         // prendi le foto nell'album che corrisponde a albumId che vanno da currentSet a currentSet+4 (estremi inclusi)
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
             preparedStatement.setInt(1, albumId);
-            preparedStatement.setInt(2, ((currentSet-1)*5));
 
             try (ResultSet result = preparedStatement.executeQuery()) {
                 while (result.next()) {
