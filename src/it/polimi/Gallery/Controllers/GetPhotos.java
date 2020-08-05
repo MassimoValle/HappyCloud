@@ -4,9 +4,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import it.polimi.Gallery.Beans.Photo;
 import it.polimi.Gallery.Dao.AlbumDAO;
+import it.polimi.Gallery.Dao.PhotoDAO;
 import it.polimi.Gallery.Utils.ConnectionHandler;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +19,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @WebServlet("/GetPhotos")
+@MultipartConfig
 public class GetPhotos extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
@@ -51,9 +54,12 @@ public class GetPhotos extends HttpServlet {
 
 
         AlbumDAO albumDAO = new AlbumDAO(connection);
+        PhotoDAO photoDAO = new PhotoDAO(connection);
         List<Photo> photos;
         try {
             photos = albumDAO.getPhotos(albumId);
+            photos = photoDAO.appendComments(photos);
+
             if (photos == null) {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "Resource not found");
                 return;

@@ -6,6 +6,7 @@ import it.polimi.Gallery.Dao.UserDAO;
 import it.polimi.Gallery.Utils.ConnectionHandler;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +17,7 @@ import java.sql.SQLException;
 import java.util.regex.Pattern;
 
 @WebServlet("/Registration")
+@MultipartConfig
 public class Registration extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private Connection connection = null;

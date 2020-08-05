@@ -1,9 +1,11 @@
 package it.polimi.Gallery.Dao;
 
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import it.polimi.Gallery.Beans.Comment;
+import it.polimi.Gallery.Beans.Photo;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PhotoDAO {
 
@@ -36,5 +38,77 @@ public class PhotoDAO {
 
             }
         }
+    }
+
+    public List<Photo> appendComments(List<Photo> photos) throws SQLException {
+
+
+        String query = "SELECT * FROM db_Gallery_TIW2020.Comments WHERE ImageId = ?";
+
+        for(Photo photo : photos){
+
+            List<Comment> comments = new ArrayList<>();
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+                preparedStatement.setInt(1, photo.getId());
+
+                try (ResultSet result = preparedStatement.executeQuery()) {
+                    while (result.next()) {
+
+                        Comment comment = new Comment();
+
+                        comment.setUsername(result.getString("Username"));
+                        comment.setText(result.getString("Text"));
+                        comment.setDate(result.getDate("date"));
+
+                        comments.add(comment);
+
+                    }
+                }
+                catch (SQLException e){
+                    connection.rollback();
+                    return null;
+                }
+            }
+
+            photo.setComments(comments);
+        }
+
+        return photos;
+    }
+
+    public List<Comment> getComments(int photoId) throws SQLException {
+
+
+        String query = "SELECT * FROM db_Gallery_TIW2020.Comments WHERE ImageId = ?";
+
+        List<Comment> comments = new ArrayList<>();
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setInt(1, photoId);
+
+            try (ResultSet result = preparedStatement.executeQuery()) {
+
+                while (result.next()) {
+
+                    Comment comment = new Comment();
+
+                    comment.setUsername(result.getString("Username"));
+                    comment.setText(result.getString("Text"));
+                    comment.setDate(result.getDate("date"));
+
+                    comments.add(comment);
+
+                }
+            }
+            catch (SQLException e){
+                connection.rollback();
+                return null;
+            }
+        }
+
+        return comments;
     }
 }

@@ -7,7 +7,7 @@
     document.getElementById("loginButton").addEventListener('click', (e) => {
         e.preventDefault();
 
-        var form = e.target.closest("form");
+        const form = e.target.closest("form");
 
         if (form.checkValidity()) {
             makeCall("POST", 'CheckLogin', e.target.closest("form"),

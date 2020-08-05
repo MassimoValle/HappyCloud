@@ -9,6 +9,7 @@
 
     let currentSet = 1;
     let photos;
+    let photoSelected;
 
     // load event
     window.addEventListener("load", () => {
@@ -215,8 +216,8 @@
 
                 if(currentSet > 1){
 
-                    let backBtn = document.createElement("input");
-                    backBtn.value = "<";
+                    let backBtn = document.createElement("button");
+                    backBtn.textContent = "<";
                     backBtn.addEventListener("click", (e) => {
 
                         e.preventDefault();
@@ -253,10 +254,12 @@
 
                         e.preventDefault();
 
-                        let img = e.target;
+                        /*let img = e.target;
                         let a = img.parentElement;
 
-                        let arg = a.getAttribute("photoId");
+                        let arg = a.getAttribute("photoId");*/
+
+                        let arg = e.target.closest("a").getAttribute("photoId");
 
                         photoDetailsTable.show(arg);
 
@@ -273,8 +276,8 @@
 
                 if(photos.length > currentSet*5){
 
-                    let nextBtn = document.createElement("input");
-                    nextBtn.value = ">";
+                    let nextBtn = document.createElement("button");
+                    nextBtn.textContent = ">";
                     nextBtn.addEventListener("click", (e) => {
 
                         e.preventDefault();
@@ -313,8 +316,6 @@
 
             const self = this;
 
-            let photoSelected;
-
             photos.forEach(function (photo) {
                 if(photo.id == photoId){
                     photoSelected = photo;
@@ -324,7 +325,7 @@
             if (photoSelected !== undefined){
 
                 self.update(photoSelected);
-                
+
                 commentsTable.reset();
                 commentsTable.show(photoSelected.comments);
 
@@ -345,8 +346,6 @@
         this.update = function (photo) {
 
             this.alert.textContent = "";
-
-            const self = this;
 
             let idTitle = document.getElementById("id_title_photoDetails");
             let idDate = document.getElementById("id_date_photoDetails");
@@ -391,7 +390,7 @@
         // compila la tabella con i meetings che il server gli fornisce
         this.update = function (comments) {
 
-            var l = comments.length;
+            const l = comments.length;
             let row, commentCell;
 
             if (l === 0) {  // controllo inutile ma per sicurezza XD
@@ -441,7 +440,7 @@
         // richiede al server tutti i meeting, sia quelli che ho creato che quelli a cui partecipo
         this.getAlbums = function() {
 
-            var self = this;
+            const self = this;
 
             makeCall("GET", "GetAlbums", null,
                 function (req) {
@@ -470,7 +469,7 @@
         // richiede al server tutti i meeting, sia quelli che ho creato che quelli a cui partecipo
         this.getPhotos = function(albumId) {
 
-            var self = this;
+            const self = this;
 
             makeCall("GET", "GetPhotos?albumId=" + albumId, null,
                 function (req) {
@@ -492,5 +491,44 @@
             );
         }
     }
+
+    document.getElementById("commentButton").addEventListener('click', (e) => {
+        e.preventDefault();
+
+        const form = e.target.closest("form");
+
+        document.getElementById("id_form_comment").elements["imgSelected"].value = photoSelected.id;
+
+
+        if (form.checkValidity()) {
+            makeCall("POST", 'AddComment', e.target.closest("form"),
+                function(req) {
+                    if (req.readyState === XMLHttpRequest.DONE) {
+
+                        const message = req.responseText;     // risposta del server
+                        switch (req.status) {
+                            case 200:
+                                form.reset();
+                                let comments = JSON.parse(message);
+                                photoSelected.comments = comments;
+                                commentsTable.show(photoSelected.comments);
+
+                                break;
+                            case 400: // bad request
+                                document.getElementById("id_alert_comments").textContent = message;
+                                break;
+                            case 401: // unauthorized
+                                document.getElementById("id_alert_comments").textContent = message;
+                                break;
+                            case 500: // server error
+                                document.getElementById("id_alert_comments").textContent = message;
+                                break;
+                        }
+                    }
+                }, false);
+        } else {
+            form.reportValidity();
+        }
+    });
 
 })();

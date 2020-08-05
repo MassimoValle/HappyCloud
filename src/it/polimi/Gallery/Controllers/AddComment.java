@@ -1,16 +1,15 @@
 package it.polimi.Gallery.Controllers;
 
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import it.polimi.Gallery.Beans.Comment;
 import it.polimi.Gallery.Beans.User;
 import it.polimi.Gallery.Dao.PhotoDAO;
 import it.polimi.Gallery.Utils.ConnectionHandler;
-import it.polimi.Gallery.Utils.ServletUtils;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.WebContext;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -18,38 +17,40 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 @WebServlet("/AddComment")
+@MultipartConfig
 public class AddComment extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
     private Connection connection = null;
-    private TemplateEngine templateEngine;
 
     public void init() throws ServletException {
-        this.templateEngine = ServletUtils.createThymeleafTemplate(getServletContext());
         connection = ConnectionHandler.getConnection(getServletContext());
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        int imgSelected = (int) request.getSession().getAttribute("imgSelected");
+        //int imgSelected = (int) request.getSession().getAttribute("imgSelected");
 
         User user = (User) request.getSession().getAttribute("user");
+        int imgSelected;
         String comment;
 
         try {
 
             comment = request.getParameter("comment");
+            imgSelected = Integer.parseInt(request.getParameter("imgSelected"));
 
             if (comment==null) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                invalidComment("Comment can't be null", request, response);
+                response.getWriter().println("Comment can't be null");
                 return;
             }
             else if(comment.isEmpty()) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                invalidComment("Comment can't be empty", request, response);
+                response.getWriter().println("Comment can't be empty");
                 return;
             }
 
@@ -67,33 +68,39 @@ public class AddComment extends HttpServlet {
             result = photoDAO.addComment(imgSelected, user.getUsername(), comment);
 
         } catch (SQLException e) {
+
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            invalidComment("SQLException: Error in database", request, response);
+            response.getWriter().println("SQLException: Error in database");
             return;
         }
 
         if(!result){
-            invalidComment("Comment not saved", request, response);
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.getWriter().println("Comment not saved");
             return;
         }
 
+        List<Comment> comments = null;
+        try {
+            comments = photoDAO.getComments(imgSelected);
 
-        request.setAttribute("addComment", true);
+        } catch (SQLException e) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.getWriter().println("SQLException: Error in database");
+        }
 
-        RequestDispatcher rd = request.getRequestDispatcher("/GetPhotos");
-        rd.forward(request, response);
+        Gson gson = new GsonBuilder().setDateFormat("yyyy MMM dd").create();
+        String json_comments = gson.toJson(comments);
+
+
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(json_comments);
+
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doPost(request, response);
-    }
-
-    private void invalidComment(String errorMessage, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String path = "/albumPage.html";
-        ServletContext servletContext = getServletContext();
-        final WebContext webContext = new WebContext(request, response, servletContext, request.getLocale());
-        webContext.setVariable("errorMessage", errorMessage);
-        templateEngine.process(path, webContext, response.getWriter());
     }
 
     public void destroy() {
