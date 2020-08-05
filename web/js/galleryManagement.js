@@ -10,6 +10,7 @@
     let currentSet = 1;
     let photos;
     let photoSelected;
+    const modal = document.getElementById("myModal");
 
     // load event
     window.addEventListener("load", () => {
@@ -148,6 +149,8 @@
 
                         e.preventDefault();
 
+                        currentSet = 1;
+
                         photoTable.init(e.target.getAttribute("albumId"));
 
                     }, false);
@@ -250,9 +253,11 @@
                     anchor.appendChild(image);
                     anchor.setAttribute('photoId', photo.id);
 
-                    anchor.addEventListener("click", (e) => {
+                    anchor.addEventListener("mouseover", (e) => {
 
                         e.preventDefault();
+
+                        modal.style.display = "block";
 
                         /*let img = e.target;
                         let a = img.parentElement;
@@ -531,4 +536,14 @@
         }
     });
 
+    document.getElementsByClassName("close")[0].onclick = function() {
+        modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
 })();

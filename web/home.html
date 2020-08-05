@@ -61,55 +61,65 @@
             </table>
         </div>
 
-        <p id="id_alert_photoDetails"></p>
-        <div class="vertical_flow">    <!-- div per la tabella di dettaglio -->
-            <table id="id_table_photoDetails">
-                <caption><h3>Image selected:</h3></caption>
 
-                <tbody id="id_tableBody_photoDetails">
+        <div id="myModal" class="modal">
+
+            <div class="modal-content">
+                <span class="close">&times;</span>
+
+                <p id="id_alert_photoDetails"></p>
+                <div class="vertical_flow">    <!-- div per la tabella di dettaglio -->
+                    <table id="id_table_photoDetails">
+                        <caption><h3>Image selected:</h3></caption>
+
+                        <tbody id="id_tableBody_photoDetails">
+                            <tr>
+                                <th>Title</th><td id="id_title_photoDetails">title</td>    <!-- prendo i td tramite selettore -->
+                            </tr>
+                            <tr>
+                                <th>Date</th><td id="id_date_photoDetails">2020-02-02</td>
+                            </tr>
+                            <tr>
+                                <th>Description</th><td id="id_description_photoDetails">This is a description</td>
+                            </tr>
+                            <tr>
+                                <th>Image</th><td><img id="id_image_photoDetails" src="./photos/default.png" class="original"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p id="id_alert_comments"></p>
+                <div class="vertical_flow">   <!-- div per la parte dei commenti -->
                     <tr>
-                        <th>Title</th><td id="id_title_photoDetails">title</td>    <!-- prendo i td tramite selettore -->
+
+                        <table id="id_table_comments">
+                            <caption><h3>Comments:</h3></caption>
+                            <tbody id="id_tableBody_comments">
+                            <!--<tr>
+                                <td th:text="${comment.username} + ': ' + ${comment.text}">user: text</td>
+                            </tr>-->
+                            </tbody>
+
+                        </table>
+
                     </tr>
                     <tr>
-                        <th>Date</th><td id="id_date_photoDetails">2020-02-02</td>
+                        <fieldset id="id_fieldset_comment">
+                            <form id="id_form_comment">
+                                <p>Write here to post a comment:</p>
+                                <input type="text" name="comment" placeholder="comment" required>
+                                <input type="hidden" name="imgSelected" value="1">
+                                <button id="commentButton" type='submit'>Submit</button>
+                            </form>
+                        </fieldset>
+
+
                     </tr>
-                    <tr>
-                        <th>Description</th><td id="id_description_photoDetails">This is a description</td>
-                    </tr>
-                    <tr>
-                        <th>Image</th><td><img id="id_image_photoDetails" src="./photos/default.png" class="original"/></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+                </div>
 
-        <p id="id_alert_comments"></p>
-        <div class="vertical_flow">   <!-- div per la parte dei commenti -->
-            <tr>
+            </div>
 
-                <table id="id_table_comments">
-                    <caption><h3>Comments:</h3></caption>
-                    <tbody id="id_tableBody_comments">
-                    <!--<tr>
-                        <td th:text="${comment.username} + ': ' + ${comment.text}">user: text</td>
-                    </tr>-->
-                    </tbody>
-
-                </table>
-
-            </tr>
-            <tr>
-                <fieldset id="id_fieldset_comment">
-                    <form id="id_form_comment">
-                        <p>Write here to post a comment:</p>
-                        <input type="text" name="comment" placeholder="comment" required>
-                        <input type="hidden" name="imgSelected" value="1">
-                        <button id="commentButton" type='submit'>Submit</button>
-                    </form>
-                </fieldset>
-
-
-            </tr>
         </div>
 
     </body>
