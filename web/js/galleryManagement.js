@@ -10,11 +10,10 @@
     let currentSet = 1;
     let photos;
     let photoSelected;
-    const modal = document.getElementById("myModal");
 
     // load event
     window.addEventListener("load", () => {
-        pageOrchestrator = new PageOrchestrator();
+        let pageOrchestrator = new PageOrchestrator();
         pageOrchestrator.start(); // inizializza i componenti
         pageOrchestrator.refresh(); // mostra i componenti
     }, false);
@@ -33,7 +32,6 @@
             let message = document.getElementById("id_username");
 
             let personalMessage = new PersonalMessage(username, message);
-
             personalMessage.show();
 
 
@@ -99,19 +97,15 @@
         // chiama la update() se meeting non è vuota, altrimenti stampa l'alert
         this.show = function (albums) {
 
-            const self = this;
+            let self = this;
 
-            // se albums non è vuota...
-            if (albums.length !== 0){
-                self.update(albums);
-            }
-            else this.alert.textContent = "No albums yet!";
+            self.update(albums);
         };
 
         // compila la tabella con i meetings che il server gli fornisce
         this.update = function (albums) {
 
-            var l = albums.length;
+            let l = albums.length;
             let row, titleCell, dateCell, linkcell, anchor;
 
             if (l === 0) {  // controllo inutile ma per sicurezza XD
@@ -121,7 +115,7 @@
                 this.listcontainerbody.innerHTML = ""; // svuota il body della tabella
                 this.alert.textContent = "";
 
-                const self = this;
+                let self = this;
 
                 albums.forEach(function (album) {
 
@@ -143,18 +137,15 @@
                     anchor = document.createElement("a");
                     let linkText = document.createTextNode("Show");
                     anchor.appendChild(linkText);
-                    anchor.setAttribute('albumId', album.id);    //IntelliJ lo dà non safe perché "idMeeting" è un attributo del database, preso da JSON. IntelliJ non ha idea che esista.
+                    anchor.setAttribute('albumId', album.id);
 
                     anchor.addEventListener("click", (e) => {
 
                         e.preventDefault();
-
                         currentSet = 1;
-
                         photoTable.init(e.target.getAttribute("albumId"));
 
                     }, false);
-
                     anchor.href = "#";
 
                     linkcell.appendChild(anchor);
@@ -189,21 +180,16 @@
         // chiama la update() se meeting non è vuota, altrimenti stampa l'alert
         this.show = function (photos) {
 
-            const self = this;
+            let self = this;
 
-            // se albums non è vuota...
-            if (photos.length !== 0){
+            self.update(photos);
 
-                self.update(photos);
-
-            }
-            else this.alert.textContent = "No photos yet!";
         };
 
         // compila la tabella con i meetings che il server gli fornisce
         this.update = function (photos) {
 
-            const l = photos.length;
+            let l = photos.length;
             let row;
 
             if (l === 0) {  // controllo inutile ma per sicurezza XD
@@ -213,7 +199,7 @@
                 this.listcontainerbody.innerHTML = ""; // svuota il body della tabella
                 this.alert.textContent = "";
 
-                const self = this;
+                let self = this;
 
                 row = document.createElement("tr");
 
@@ -224,10 +210,10 @@
                     backBtn.addEventListener("click", (e) => {
 
                         e.preventDefault();
-                            currentSet = currentSet-1;
-                            self.update(photos);
+                        currentSet = currentSet-1;
+                        self.show(photos);
 
-                        }, false);
+                    }, false);
 
                     let cell = document.createElement("td");
                     cell.appendChild(backBtn);
@@ -257,15 +243,10 @@
 
                         e.preventDefault();
 
+                        let modal = document.getElementById("myModal");
                         modal.style.display = "block";
 
-                        /*let img = e.target;
-                        let a = img.parentElement;
-
-                        let arg = a.getAttribute("photoId");*/
-
                         let arg = e.target.closest("a").getAttribute("photoId");
-
                         photoDetailsTable.show(arg);
 
                      }, false);
@@ -287,7 +268,7 @@
 
                         e.preventDefault();
                         currentSet = currentSet+1;
-                        self.update(photos);
+                        self.show(photos);
 
                     }, false);
 
@@ -319,13 +300,9 @@
         // chiama la update() se meeting non è vuota, altrimenti stampa l'alert
         this.show = function (photoId) {
 
-            const self = this;
+            let self = this;
 
-            photos.forEach(function (photo) {
-                if(photo.id == photoId){
-                    photoSelected = photo;
-                }
-            });
+            photoSelected = self.searchPhoto(photoId);
 
             if (photoSelected !== undefined){
 
@@ -340,11 +317,16 @@
 
 
         this.searchPhoto = function (photoId) {
+
+            let p;
+
             photos.forEach(function (photo) {
                 if(photo.id == photoId){
-                    return photo;
+                    p = photo;
                 }
             });
+
+            return p;
         }
 
 
@@ -382,7 +364,7 @@
         // chiama la update() se meeting non è vuota, altrimenti stampa l'alert
         this.show = function (comments) {
 
-            const self = this;
+            let self = this;
 
             // se albums non è vuota...
             if (comments.length !== 0){
@@ -395,7 +377,7 @@
         // compila la tabella con i meetings che il server gli fornisce
         this.update = function (comments) {
 
-            const l = comments.length;
+            let l = comments.length;
             let row, commentCell;
 
             if (l === 0) {  // controllo inutile ma per sicurezza XD
@@ -405,7 +387,7 @@
                 this.listcontainerbody.innerHTML = ""; // svuota il body della tabella
                 this.alert.textContent = "";
 
-                const self = this;
+                let self = this;
 
                 comments.forEach(function (comment) {
 
@@ -439,13 +421,17 @@
 
     }
 
+
+
+
+    // CONTROLLERS
     function AlbumController(_alert) {
         this.alert = _alert;
 
         // richiede al server tutti i meeting, sia quelli che ho creato che quelli a cui partecipo
         this.getAlbums = function() {
 
-            const self = this;
+            let self = this;
 
             makeCall("GET", "GetAlbums", null,
                 function (req) {
@@ -474,7 +460,7 @@
         // richiede al server tutti i meeting, sia quelli che ho creato che quelli a cui partecipo
         this.getPhotos = function(albumId) {
 
-            const self = this;
+            let self = this;
 
             makeCall("GET", "GetPhotos?albumId=" + albumId, null,
                 function (req) {
@@ -497,10 +483,13 @@
         }
     }
 
+
+
+    // COMMENT FORM
     document.getElementById("commentButton").addEventListener('click', (e) => {
         e.preventDefault();
 
-        const form = e.target.closest("form");
+        let form = e.target.closest("form");
 
         document.getElementById("id_form_comment").elements["imgSelected"].value = photoSelected.id;
 
@@ -510,7 +499,7 @@
                 function(req) {
                     if (req.readyState === XMLHttpRequest.DONE) {
 
-                        const message = req.responseText;     // risposta del server
+                        let message = req.responseText;     // risposta del server
                         switch (req.status) {
                             case 200:
                                 form.reset();
@@ -536,12 +525,18 @@
         }
     });
 
+
+
+
+    // MODAL WINDOW
     document.getElementsByClassName("close")[0].onclick = function() {
+        let modal = document.getElementById("myModal");
         modal.style.display = "none";
     }
 
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function(event) {
+        let modal = document.getElementById("myModal");
         if (event.target == modal) {
             modal.style.display = "none";
         }
