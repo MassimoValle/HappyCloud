@@ -2,6 +2,7 @@ package it.polimi.Gallery.Controllers;
 
 import it.polimi.Gallery.Beans.Photo;
 import it.polimi.Gallery.Dao.AlbumDAO;
+import it.polimi.Gallery.Dao.PhotoDAO;
 import it.polimi.Gallery.Utils.ConnectionHandler;
 import it.polimi.Gallery.Utils.ServletUtils;
 import org.thymeleaf.TemplateEngine;
@@ -72,9 +73,11 @@ public class GetPhotos extends HttpServlet {
         request.getSession().setAttribute("imgSelected", imgSelected);
 
         AlbumDAO albumDAO = new AlbumDAO(connection);
+        PhotoDAO photoDAO = new PhotoDAO(connection);
         List<Photo> photos;
         try {
             photos = albumDAO.getFivePhotos(albumId, currentSet);
+            photos = photoDAO.getComments(photos);
             if (photos == null) {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "Resource not found");
                 return;
