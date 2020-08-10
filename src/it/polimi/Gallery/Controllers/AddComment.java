@@ -30,7 +30,7 @@ public class AddComment extends HttpServlet {
         connection = ConnectionHandler.getConnection(getServletContext());
     }
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         //int imgSelected = (int) request.getSession().getAttribute("imgSelected");
 
@@ -62,31 +62,29 @@ public class AddComment extends HttpServlet {
 
         PhotoDAO photoDAO = new PhotoDAO(connection);
 
-        boolean result;
+        List<Comment> comments;
 
         try {
-            result = photoDAO.addComment(imgSelected, user.getUsername(), comment);
+            boolean result = photoDAO.addComment(imgSelected, user.getUsername(), comment);
 
-        } catch (SQLException e) {
+            if(!result){
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                response.getWriter().println("Comment not saved");
+                return;
+            }
 
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().println("SQLException: Error in database");
-            return;
-        }
-
-        if(!result){
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().println("Comment not saved");
-            return;
-        }
-
-        List<Comment> comments = null;
-        try {
+            /*
+            * potrei far tornare solo il commento aggiunto, ma se un'altro
+            * utente aggiunge un commento nel frattempo non viene caricato
+            */
             comments = photoDAO.getComments(imgSelected);
 
+
         } catch (SQLException e) {
+
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             response.getWriter().println("SQLException: Error in database");
+            return;
         }
 
         Gson gson = new GsonBuilder().setDateFormat("yyyy MMM dd").create();
@@ -99,7 +97,7 @@ public class AddComment extends HttpServlet {
 
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         doPost(request, response);
     }
 

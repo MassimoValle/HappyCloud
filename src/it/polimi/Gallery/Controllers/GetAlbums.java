@@ -28,7 +28,7 @@ public class GetAlbums extends HttpServlet {
         connection = ConnectionHandler.getConnection(getServletContext());
     }
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         AlbumDAO albumDAO = new AlbumDAO(connection);
         List<Album> albums;
@@ -53,7 +53,7 @@ public class GetAlbums extends HttpServlet {
 
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         doPost(request, response);
     }
 

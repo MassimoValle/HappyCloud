@@ -25,12 +25,6 @@ public class GetPhotos extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private Connection connection = null;
 
-    private int albumId;
-    private int currentSet;
-    private int imgSelected;
-
-
-
 
     public void init() throws ServletException {
         connection = ConnectionHandler.getConnection(getServletContext());
@@ -43,6 +37,7 @@ public class GetPhotos extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
+        int albumId;
         try {
             albumId = Integer.parseInt(request.getParameter("albumId"));
 
