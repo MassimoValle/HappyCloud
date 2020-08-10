@@ -19,8 +19,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.regex.Pattern;
 
-@WebServlet("/Registration")
-public class Registration extends HttpServlet {
+@WebServlet("/Signup")
+public class Signup extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private Connection connection = null;
     private TemplateEngine templateEngine;

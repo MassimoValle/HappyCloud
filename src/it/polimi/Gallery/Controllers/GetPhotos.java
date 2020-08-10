@@ -63,7 +63,8 @@ public class GetPhotos extends HttpServlet {
 
             } catch (NumberFormatException | NullPointerException e) {
                 // only for debugging e.printStackTrace();
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Incorrect param values");
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                invalidComment("Incorrect param values", request, response);
                 return;
             }
 
@@ -79,11 +80,13 @@ public class GetPhotos extends HttpServlet {
             photos = albumDAO.getFivePhotos(albumId, currentSet);
             photos = photoDAO.getComments(photos);
             if (photos == null) {
-                response.sendError(HttpServletResponse.SC_NOT_FOUND, "Resource not found");
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                invalidComment("Resource not found", request, response);
                 return;
             }
         } catch (SQLException e) {
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "SQLException: Not possible to recover photos");
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            invalidComment("Not possible to recover photos", request, response);
             return;
         }
 
@@ -105,7 +108,7 @@ public class GetPhotos extends HttpServlet {
 
         if(imgSelected < 0) imgSelected = 6;
 
-        else {  // TODO da sistemare con lambda exp
+        else {
             for (Photo photo : photos){
                 if(photo.getId() == imgSelected)
                     imgSelected = photos.indexOf(photo);
@@ -124,6 +127,14 @@ public class GetPhotos extends HttpServlet {
         ctx.setVariable("before", before);
         ctx.setVariable("next", next);
         templateEngine.process(path, ctx, response.getWriter());
+    }
+
+    private void invalidComment(String errorMessage, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String path = "/albumPage.html";
+        ServletContext servletContext = getServletContext();
+        final WebContext webContext = new WebContext(request, response, servletContext, request.getLocale());
+        webContext.setVariable("errorMessage", errorMessage);
+        templateEngine.process(path, webContext, response.getWriter());
     }
 
 

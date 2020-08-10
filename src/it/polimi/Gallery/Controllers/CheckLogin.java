@@ -36,6 +36,10 @@ public class CheckLogin extends HttpServlet {
         connection = ConnectionHandler.getConnection(getServletContext());
     }
 
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        doPost(request, response);
+    }
+
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
