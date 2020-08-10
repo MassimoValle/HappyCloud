@@ -29,7 +29,7 @@
 
 
 
-            makeCall("POST", "Registration", form,
+            makeCall("POST", "Signup", form,
                 function (request) {
                     if (request.readyState === XMLHttpRequest.DONE) {
                         var message = request.responseText;

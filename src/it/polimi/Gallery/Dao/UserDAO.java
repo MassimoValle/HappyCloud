@@ -49,29 +49,6 @@ public class UserDAO {
 		return user;
 	}
 
-	public ArrayList<User> getUsers() throws SQLException {
-		String query = "SELECT * FROM db_Gallery_TIW2020.user";
-		ArrayList<User> users = new ArrayList<>();
-		
-		// try-catch with resources
-		try (Statement statement = connection.createStatement()) {
-			try (ResultSet resultSet = statement.executeQuery(query)) {
-				while (resultSet.next()){
-
-					User user = initUser(resultSet);
-					users.add(user);
-				}
-			}
-			catch (SQLException e){
-				connection.rollback();
-				// statement.rollback
-				return null;
-			}
-		}
-		
-		return users;
-	}
-
 	public User registerUser(String username, String name, String surname, String email, String password) throws SQLException{
 
 		User user = new User();

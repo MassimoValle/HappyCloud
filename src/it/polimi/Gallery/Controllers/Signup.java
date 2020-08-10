@@ -16,9 +16,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.regex.Pattern;
 
-@WebServlet("/Registration")
+@WebServlet("/Signup")
 @MultipartConfig
-public class Registration extends HttpServlet {
+public class Signup extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private Connection connection = null;
     

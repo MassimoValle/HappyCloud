@@ -83,27 +83,4 @@ public class AlbumDAO {
     }
 
 
-    public boolean hasNext(Integer albumId, Integer currentSet) throws SQLException {
-
-        String query = "SELECT * FROM db_Gallery_TIW2020.Image " +
-                "WHERE AlbumId = ? LIMIT 5 OFFSET ?";
-        //exclude currentSet x 5 result
-
-
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-
-            preparedStatement.setInt(1, albumId);
-            preparedStatement.setInt(2, (currentSet*5));
-
-            try (ResultSet result = preparedStatement.executeQuery()) {
-
-                return result.next();
-            } catch (SQLException e) {
-                connection.rollback();
-                return false;
-            }
-        }
-    }
-
-
 }
