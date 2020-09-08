@@ -66,6 +66,8 @@ public class CheckLogin extends HttpServlet {
         } catch (NullPointerException e) {
             e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            invalidCredentials("Somthing went wrong, please try again", request, response);
+
             return;
         }
 
@@ -90,7 +92,6 @@ public class CheckLogin extends HttpServlet {
         }
 
         request.getSession().setAttribute("user", user);
-        //request.getServletContext().setAttribute("user", user);
         path = getServletContext().getContextPath() + "/GoToHome";
         response.sendRedirect(path);
     }

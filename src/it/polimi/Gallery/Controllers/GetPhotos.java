@@ -70,7 +70,7 @@ public class GetPhotos extends HttpServlet {
 
         }
 
-        //TODO
+
         request.getSession().setAttribute("imgSelected", imgSelected);
 
         AlbumDAO albumDAO = new AlbumDAO(connection);
@@ -106,7 +106,7 @@ public class GetPhotos extends HttpServlet {
         if(currentSet > 1) before = true;
 
 
-        if(imgSelected < 0) imgSelected = 6;
+        if(imgSelected < 0) imgSelected = 6;    // significa invalid
 
         else {
             for (Photo photo : photos){
