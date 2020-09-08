@@ -48,8 +48,8 @@ public class GetPhotos extends HttpServlet {
         }
 
 
-        AlbumDAO albumDAO = new AlbumDAO(connection);
-        PhotoDAO photoDAO = new PhotoDAO(connection);
+        AlbumDAO albumDAO = new AlbumDAO(connection);   // usato per prendere le foto
+        PhotoDAO photoDAO = new PhotoDAO(connection);   // usato per aggiungere i commenti alle foto
         List<Photo> photos;
         try {
             photos = albumDAO.getPhotos(albumId);

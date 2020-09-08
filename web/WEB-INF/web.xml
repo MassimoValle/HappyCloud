@@ -27,11 +27,11 @@
     </filter>
     <filter-mapping>
         <filter-name>LoginChecker</filter-name>
-        <url-pattern>/GoToHome</url-pattern>
-        <url-pattern>/home.html</url-pattern>
-        <url-pattern>/GetPhotos</url-pattern>
-        <url-pattern>/albumPage.html</url-pattern>
         <url-pattern>/AddComment</url-pattern>
+        <url-pattern>/GetAlbums</url-pattern>
+        <url-pattern>/GetPhotos</url-pattern>
+
+        <url-pattern>/home.html</url-pattern>
     </filter-mapping>
 
 </web-app>

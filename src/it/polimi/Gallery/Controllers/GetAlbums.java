@@ -39,7 +39,7 @@ public class GetAlbums extends HttpServlet {
         } catch (SQLException e) {
 
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().println("Not possible to recover albums");
+            response.getWriter().println("Not possible to recover albums, try later");
             return;
         }
 

@@ -53,6 +53,7 @@ public class CheckLogin extends HttpServlet {
 
         } catch (NullPointerException e) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().println("Login error: Something went wrong, try again!");
             return;
         }
 

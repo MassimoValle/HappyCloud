@@ -57,6 +57,7 @@ public class AddComment extends HttpServlet {
         } catch (NullPointerException e) {
             e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().println("Something went wrong, try again!");
             return;
         }
 
@@ -69,7 +70,7 @@ public class AddComment extends HttpServlet {
 
             if(!result){
                 response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                response.getWriter().println("Comment not saved");
+                response.getWriter().println("Internal Server Error: Comment not saved");
                 return;
             }
 
@@ -83,7 +84,7 @@ public class AddComment extends HttpServlet {
         } catch (SQLException e) {
 
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().println("SQLException: Error in database");
+            response.getWriter().println("Internal Server Error: please try later");
             return;
         }
 

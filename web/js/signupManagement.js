@@ -1,11 +1,12 @@
+/**
+ * Signup management
+ */
+
 (function(){
     document.getElementById("registrationButton").addEventListener("click", (event) => {
         event.preventDefault();
 
         const form = event.target.closest("form");
-
-
-
 
         if (form.checkValidity()) {
 
@@ -39,6 +40,9 @@
                                 window.location.href = "home.html";
                                 break;
                             case 400:   //bad request
+                                document.getElementById("id_errorMessage").textContent = message;
+                                break;
+                            case 401:   //unathorized
                                 document.getElementById("id_errorMessage").textContent = message;
                                 break;
                             case 500:   //server error

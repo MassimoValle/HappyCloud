@@ -34,7 +34,7 @@ public class Signup extends HttpServlet {
         String surname;
         String email;
         String password;
-        String confPassowrd;
+        String confPassoword;
 
         try {
             username = request.getParameter("username");
@@ -42,34 +42,34 @@ public class Signup extends HttpServlet {
             surname = request.getParameter("surname");
             email = request.getParameter("email");
             password = request.getParameter("password");
-            confPassowrd = request.getParameter("confPassword");
+            confPassoword = request.getParameter("confPassword");
 
-            if (username==null || name==null || surname== null || email==null || password==null || confPassowrd==null) {
+            if (username==null || name==null || surname== null || email==null || password==null || confPassoword==null) {
 
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                response.getWriter().println("Registration error: Attributes can't be null");
+                response.getWriter().println("Signup error: Attributes can't be null");
                 return;
             }
-            else if(username.isEmpty() || name.isEmpty() || surname.isEmpty() || email.isEmpty() || password.isEmpty() || confPassowrd.isEmpty()) {
+            else if(username.isEmpty() || name.isEmpty() || surname.isEmpty() || email.isEmpty() || password.isEmpty() || confPassoword.isEmpty()) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                response.getWriter().println("Registration error: Attributes can't be empty");
+                response.getWriter().println("Signup error: Attributes can't be empty");
                 return;
             }
             else if (!isEmailValid(email)){
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                response.getWriter().println("The email isn't valid.");
+                response.getWriter().println("Signup error: The email isn't valid.");
                 return;
             }
-            else if (!password.equals(confPassowrd)){
+            else if (!password.equals(confPassoword)){
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                response.getWriter().println("Passwords aren't equal!");
+                response.getWriter().println("Signup error: Passwords aren't equal!");
                 return;
             }
 
         } catch (NullPointerException e) {
             e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().println("Registration error: NullPointerException");
+            response.getWriter().println("Signup error: Something went wrong, try again!");
             return;
         }
 
@@ -83,14 +83,14 @@ public class Signup extends HttpServlet {
             user = userDao.registerUser(username, name, surname, email, password);
         } catch (SQLException e) {
             // se exc -> invalid username
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().println("Registration error: Choose another username");
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().println("Signup error: username or email are already used");
             return;
         }
 
         if (user == null) {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().println("Registration error: Not Possible to check attributes");
+            response.getWriter().println("Signup error: Not Possible to check attributes");
             return;
         }
 

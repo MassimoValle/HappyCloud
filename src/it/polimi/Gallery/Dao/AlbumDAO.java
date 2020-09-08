@@ -25,7 +25,8 @@ public class AlbumDAO {
 
         List<Album> albums = new ArrayList<>();
 
-        String query = "SELECT * FROM db_Gallery_TIW2020.album ORDER BY Date DESC";
+        //String query = "SELECT * FROM db_Gallery_TIW2020.album ORDER BY Date DESC";
+        String query =  "SELECT * FROM db_Gallery_TIW2020.album LEFT JOIN db_Gallery_TIW2020.Sort ON db_Gallery_TIW2020.album.Id = db_Gallery_TIW2020.Sort.AlbumId ORDER BY db_Gallery_TIW2020.Sort.Index, Date DESC";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 

@@ -82,8 +82,8 @@
 
     function AlbumTable(_alert, _listcontainer, _listcontainerbody) {
         this.alert = _alert;
-        this.listcontainer = _listcontainer;            // intera tabella html dei meetings
-        this.listcontainerbody = _listcontainerbody;    // solo il body della tabella html dei meetings
+        this.listcontainer = _listcontainer;            // intera tabella html degli album
+        this.listcontainerbody = _listcontainerbody;    // solo il body della tabella html degli album
 
         this.reset = function () {
 
@@ -94,7 +94,6 @@
             albumController.getAlbums();
         }
 
-        // chiama la update() se meeting non è vuota, altrimenti stampa l'alert
         this.show = function (albums) {
 
             let self = this;
@@ -102,7 +101,7 @@
             self.update(albums);
         };
 
-        // compila la tabella con i meetings che il server gli fornisce
+        // compila la tabella con gli album che il server gli fornisce
         this.update = function (albums) {
 
             let l = albums.length;
@@ -143,7 +142,7 @@
 
                         e.preventDefault();
                         currentSet = 1;
-                        photoTable.init(e.target.getAttribute("albumId"));
+                        photoTable.init(e.target.getAttribute("albumId"));  // quando faccio click su un album
 
                     }, false);
                     anchor.href = "#";
@@ -154,6 +153,7 @@
 
                     self.listcontainerbody.appendChild(row);
                 });
+
                 this.listcontainer.style.visibility = "visible";
             }
         }
@@ -177,7 +177,6 @@
             photoController.getPhotos(albumId);
         }
 
-        // chiama la update() se meeting non è vuota, altrimenti stampa l'alert
         this.show = function (photos) {
 
             let self = this;
@@ -186,7 +185,7 @@
 
         };
 
-        // compila la tabella con i meetings che il server gli fornisce
+        // compila la tabella con le foto che il server gli fornisce
         this.update = function (photos) {
 
             let l = photos.length;
@@ -308,7 +307,7 @@
 
                 self.update(photoSelected);
 
-                commentsTable.reset();
+                commentsTable.reset();  // devo farlo ogni volta per aggiornare la tabella
                 commentsTable.show(photoSelected.comments);
 
             }
@@ -368,10 +367,13 @@
 
             // se albums non è vuota...
             if (comments.length !== 0){
+
                 self.update(comments);
-                commentForm.show();
+                //commentForm.show();
+
             }
             else this.alert.textContent = "No comments yet!";
+            commentForm.show();
         };
 
         // compila la tabella con i meetings che il server gli fornisce
@@ -414,7 +416,6 @@
             this.listcontainer.style.visibility = "hidden";
         }
 
-        // chiama la update() se meeting non è vuota, altrimenti stampa l'alert
         this.show = function () {
             this.listcontainer.style.visibility = "visible";
         };
@@ -428,7 +429,7 @@
     function AlbumController(_alert) {
         this.alert = _alert;
 
-        // richiede al server tutti i meeting, sia quelli che ho creato che quelli a cui partecipo
+        // richiede al server tutti i gli album
         this.getAlbums = function() {
 
             let self = this;
@@ -457,7 +458,7 @@
     function PhotoController(_alert) {
         this.alert = _alert;
 
-        // richiede al server tutti i meeting, sia quelli che ho creato che quelli a cui partecipo
+        // richiede al server tutte le foto
         this.getPhotos = function(albumId) {
 
             let self = this;
@@ -491,6 +492,7 @@
 
         let form = e.target.closest("form");
 
+        // imposto l'immagine selezionata nel campo imgSelected della form
         document.getElementById("id_form_comment").elements["imgSelected"].value = photoSelected.id;
 
 
@@ -534,7 +536,7 @@
         modal.style.display = "none";
     }
 
-    // When the user clicks anywhere outside of the modal, close it
+    // Quando clicki fuori dall finestra modale, questa si chiude
     window.onclick = function(event) {
         let modal = document.getElementById("myModal");
         if (event.target == modal) {
