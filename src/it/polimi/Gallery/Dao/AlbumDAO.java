@@ -21,14 +21,16 @@ public class AlbumDAO {
     }
 
 
-    public List<Album> getAlbums() throws SQLException {
+    public List<Album> getAlbums(String username) throws SQLException {
 
         List<Album> albums = new ArrayList<>();
 
-        //String query = "SELECT * FROM db_Gallery_TIW2020.album ORDER BY Date DESC";
-        String query =  "SELECT * FROM db_Gallery_TIW2020.album LEFT JOIN db_Gallery_TIW2020.Sort ON db_Gallery_TIW2020.album.Id = db_Gallery_TIW2020.Sort.AlbumId ORDER BY db_Gallery_TIW2020.Sort.Index, Date DESC";
+        String query = "SELECT * FROM db_Gallery_TIW2020.album ORDER BY Date DESC";
+        //String query =  "SELECT * FROM db_Gallery_TIW2020.album LEFT JOIN db_Gallery_TIW2020.Sort ON db_Gallery_TIW2020.album.Id = db_Gallery_TIW2020.Sort.AlbumId WHERE Username = ? ORDER BY db_Gallery_TIW2020.Sort.Index, Date DESC";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            //preparedStatement.setString(1, username);
 
             try (ResultSet result = preparedStatement.executeQuery()) {
                 while (result.next()) {

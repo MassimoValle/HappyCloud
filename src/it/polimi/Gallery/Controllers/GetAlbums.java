@@ -3,6 +3,7 @@ package it.polimi.Gallery.Controllers;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import it.polimi.Gallery.Beans.Album;
+import it.polimi.Gallery.Beans.User;
 import it.polimi.Gallery.Dao.AlbumDAO;
 import it.polimi.Gallery.Utils.ConnectionHandler;
 
@@ -30,11 +31,12 @@ public class GetAlbums extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
+        User user = (User) request.getSession().getAttribute("user");
         AlbumDAO albumDAO = new AlbumDAO(connection);
         List<Album> albums;
 
         try {
-            albums = albumDAO.getAlbums();
+            albums = albumDAO.getAlbums(user.getUsername());
 
         } catch (SQLException e) {
 
